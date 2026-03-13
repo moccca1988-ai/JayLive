@@ -27,7 +27,6 @@ function LiveOverlay({ isHost }: { isHost: boolean }) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isMessagesOpen, setIsMessagesOpen] = useState(false);
   const participants = useParticipants();
-  const room = useRoomContext();
   const tracks = useTracks([Track.Source.Camera]);
 
   // Find the host track
@@ -36,7 +35,7 @@ function LiveOverlay({ isHost }: { isHost: boolean }) {
   return (
     <>
       {/* Fullscreen Video Background */}
-      <div className="fixed inset-0 z-0 bg-black">
+      <div className="fixed inset-0 z-0 bg-[#0B0B0F]">
         {hostTrack ? (
           <ParticipantTile
             trackRef={hostTrack}
@@ -44,8 +43,8 @@ function LiveOverlay({ isHost }: { isHost: boolean }) {
             disableSpeakingIndicator
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-white/50 text-xl font-light">
-            Stream startet gleich
+          <div className="w-full h-full flex items-center justify-center text-white/20 text-xl font-medium tracking-tight">
+            Waiting for stream...
           </div>
         )}
       </div>
@@ -53,24 +52,24 @@ function LiveOverlay({ isHost }: { isHost: boolean }) {
       {/* UI Overlays */}
       <div className="fixed inset-0 z-[100] pointer-events-none">
         {/* Top Left: LIVE Badge */}
-        <div className="absolute top-12 left-4 flex items-center gap-2 bg-black/30 backdrop-blur-xl border border-white/10 rounded-full px-3.5 py-1.5 pointer-events-auto shadow-sm">
-          <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.6)]" />
-          <span className="text-[11px] font-bold tracking-widest text-white uppercase">Live</span>
+        <div className="absolute top-12 left-4 flex items-center gap-2.5 bg-black/40 backdrop-blur-2xl border border-white/10 rounded-full px-4 py-2 pointer-events-auto shadow-2xl">
+          <div className="w-2 h-2 bg-[#EF4444] rounded-full animate-pulse shadow-[0_0_12px_rgba(239,68,68,0.8)]" />
+          <span className="text-[11px] font-black tracking-[0.2em] text-white uppercase">Live</span>
         </div>
 
-        {/* Top Right: Viewer Counter & Shop Button Stack */}
-        <div className="absolute top-12 right-4 flex flex-col items-end gap-3 pointer-events-none">
-          {/* Viewer Counter */}
-          <div className="flex items-center gap-1.5 bg-black/30 backdrop-blur-xl border border-white/10 rounded-full px-3.5 py-1.5 pointer-events-auto shadow-sm">
-            <Users size={14} className="text-white/90" />
-            <span className="text-[13px] font-bold italic tracking-tight text-white">{participants.length}</span>
-          </div>
+        {/* Top Right: Viewer Counter */}
+        <div className="absolute top-12 right-4 flex items-center gap-2 bg-black/40 backdrop-blur-2xl border border-white/10 rounded-full px-4 py-2 pointer-events-auto shadow-2xl">
+          <Users size={14} className="text-white/70" />
+          <span className="text-[13px] font-black tracking-tight text-white">{participants.length}</span>
+        </div>
 
+        {/* Right Side Vertical Stack */}
+        <div className="absolute top-28 right-4 flex flex-col gap-3 pointer-events-none">
           {/* Messages Button (Viewer only) */}
           {!isHost && (
             <button
               onClick={() => setIsMessagesOpen(true)}
-              className="bg-black/30 backdrop-blur-xl border border-white/10 text-white rounded-full p-2.5 shadow-2xl hover:bg-black/40 hover:scale-105 active:scale-95 transition-all pointer-events-auto flex items-center justify-center"
+              className="glass w-12 h-12 text-white rounded-full shadow-2xl hover:scale-105 active:scale-95 transition-all pointer-events-auto flex items-center justify-center"
               title="Messages"
             >
               <MessageSquare size={20} />
@@ -80,10 +79,10 @@ function LiveOverlay({ isHost }: { isHost: boolean }) {
           {/* Shopping Button */}
           <button
             onClick={() => setIsDrawerOpen(true)}
-            className="bg-white/10 backdrop-blur-xl border border-white/20 text-white rounded-full px-4 py-2.5 shadow-2xl shadow-black/50 hover:bg-white/20 hover:scale-105 active:scale-95 transition-all pointer-events-auto flex items-center justify-center gap-2 font-semibold"
+            className="btn-primary w-12 h-12 text-white flex items-center justify-center pointer-events-auto"
+            title="Shop"
           >
-            <ShoppingBag size={18} strokeWidth={2.5} />
-            <span className="text-[14px]">Shop</span>
+            <ShoppingBag size={20} strokeWidth={2.5} />
           </button>
         </div>
 

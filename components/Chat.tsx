@@ -3,6 +3,7 @@
 import { useChat } from '@livekit/components-react';
 import { useState, useRef, useEffect } from 'react';
 import { Send } from 'lucide-react';
+import { motion } from 'motion/react';
 
 export default function Chat() {
   const { send, chatMessages, isSending } = useChat();
@@ -63,45 +64,50 @@ export default function Chat() {
   };
 
   return (
-    <div className="absolute bottom-8 left-4 right-4 md:right-auto md:w-[320px] max-h-80 flex flex-col justify-end pointer-events-none z-40 pb-safe">
-      <div className="overflow-y-auto mb-3 flex flex-col gap-2 no-scrollbar pointer-events-auto max-h-48 mask-image-b-fade">
+    <div className="absolute bottom-8 left-4 right-4 md:right-auto md:w-[340px] max-h-96 flex flex-col justify-end pointer-events-none z-40 pb-safe">
+      <div className="overflow-y-auto mb-4 flex flex-col gap-2.5 no-scrollbar pointer-events-auto max-h-56 mask-image-b-fade px-1">
         {chatMessages.map((msg, idx) => {
           const parsed = parseMessage(msg.message);
           return (
-            <div key={idx} className="bg-black/20 backdrop-blur-xl border border-white/10 rounded-2xl px-3.5 py-2 text-[14px] w-fit max-w-full break-words shadow-sm">
-              <span className="font-semibold text-white/70 mr-2">{msg.from?.name || 'User'}</span>
-              <span className={`${fonts[parsed.font] || fonts.standard} ${colors[parsed.color] || colors.white}`}>
+            <motion.div 
+              initial={{ opacity: 0, x: -10, scale: 0.95 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              key={idx} 
+              className="glass rounded-2xl px-4 py-2.5 text-[14px] w-fit max-w-full break-words shadow-lg"
+            >
+              <span className="font-black text-white/40 text-[11px] uppercase tracking-wider mr-2">{msg.from?.name || 'User'}</span>
+              <span className={`${fonts[parsed.font] || fonts.standard} ${colors[parsed.color] || colors.white} font-medium`}>
                 {parsed.text}
               </span>
-            </div>
+            </motion.div>
           );
         })}
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="flex flex-col gap-2 pointer-events-auto">
+      <div className="flex flex-col gap-3 pointer-events-auto">
         {/* Style Controls */}
-        <div className="flex items-center justify-between bg-black/40 backdrop-blur-xl border border-white/10 rounded-xl p-2 gap-2">
+        <div className="flex items-center justify-between glass rounded-2xl p-2.5 gap-3 shadow-2xl">
           <div className="flex gap-1.5">
             {Object.keys(fonts).map((f) => (
               <button
                 key={f}
                 onClick={() => setFontStyle(f)}
-                className={`text-[10px] px-2 py-1 rounded-md transition-all ${
-                  fontStyle === f ? 'bg-white text-black' : 'bg-white/5 text-white/60 hover:bg-white/10'
-                } capitalize ${fonts[f]}`}
+                className={`text-[10px] px-2.5 py-1.5 rounded-lg transition-all font-black uppercase tracking-wider ${
+                  fontStyle === f ? 'bg-white text-black' : 'bg-white/5 text-white/40 hover:bg-white/10'
+                } ${fonts[f]}`}
               >
                 {f}
               </button>
             ))}
           </div>
-          <div className="flex gap-1.5">
+          <div className="flex gap-2">
             {Object.keys(colors).map((c) => (
               <button
                 key={c}
                 onClick={() => setTextColor(c)}
-                className={`w-4 h-4 rounded-full border border-white/20 transition-all ${
-                  textColor === c ? 'scale-125 border-white' : 'hover:scale-110'
+                className={`w-4 h-4 rounded-full border border-white/10 transition-all ${
+                  textColor === c ? 'scale-125 border-white ring-2 ring-white/20' : 'hover:scale-110'
                 }`}
                 style={{ backgroundColor: colorValues[c] }}
               />
@@ -109,20 +115,20 @@ export default function Chat() {
           </div>
         </div>
 
-        <form onSubmit={handleSend} className="flex gap-2">
+        <form onSubmit={handleSend} className="flex gap-2.5">
           <input
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Sag etwas..."
-            className={`flex-1 bg-black/30 backdrop-blur-xl border border-white/20 rounded-full px-5 py-3 text-[15px] focus:outline-none focus:border-white/40 placeholder:text-white/60 shadow-sm transition-colors ${fonts[fontStyle]} ${colors[textColor]}`}
+            placeholder="Say something..."
+            className={`flex-1 glass rounded-full px-6 py-4 text-[15px] focus:outline-none focus:ring-2 focus:ring-white/10 placeholder:text-white/30 shadow-2xl transition-all ${fonts[fontStyle]} ${colors[textColor]} font-medium`}
           />
           <button
             type="submit"
             disabled={isSending || !message.trim()}
-            className="bg-white text-black rounded-full p-3 flex items-center justify-center hover:bg-gray-200 active:scale-95 transition-all disabled:opacity-50 disabled:active:scale-100 shadow-sm"
+            className="btn-primary w-14 h-14 flex items-center justify-center disabled:opacity-30 disabled:grayscale transition-all"
           >
-            <Send size={18} strokeWidth={2.5} />
+            <Send size={20} strokeWidth={3} className="text-white" />
           </button>
         </form>
       </div>

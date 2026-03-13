@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocalParticipant } from '@livekit/components-react';
-import { Send, ArrowLeft } from 'lucide-react';
+import { Send, ArrowLeft, MessageSquare } from 'lucide-react';
+import { motion } from 'motion/react';
 
 import { Conversation, Message } from '@/modules/reservation-messaging/server/db';
 
@@ -115,25 +116,25 @@ export default function ReservationMessages({ role }: { role: 'host' | 'viewer' 
 
   if (activeConversation) {
     return (
-      <div className="flex flex-col h-full bg-[#141414]">
-          <div className="flex items-center gap-3 p-4 border-b border-white/10">
+      <div className="flex flex-col h-full bg-transparent">
+          <div className="flex items-center gap-4 p-5 border-b border-white/5">
             <button 
               onClick={() => setActiveConversation(null)}
-              className="p-2 bg-white/5 rounded-full hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer"
+              className="p-2.5 bg-white/5 rounded-full hover:bg-white/10 text-white/40 hover:text-white transition-all cursor-pointer active:scale-90"
             >
               <ArrowLeft size={18} />
             </button>
             <div className="flex-1">
-              <h3 className="text-sm font-bold text-white">{activeConversation.drop_title}</h3>
-              <p className="text-xs text-white/50">
-                {role === 'host' ? activeConversation.viewer_id : activeConversation.host_id} • Option: {activeConversation.option_selected} • #{activeConversation.reservation_position}
+              <h3 className="text-sm font-black text-white tracking-tight">{activeConversation.drop_title}</h3>
+              <p className="text-[10px] text-white/30 font-black uppercase tracking-widest mt-0.5">
+                {role === 'host' ? activeConversation.viewer_id : activeConversation.host_id} • {activeConversation.option_selected} • #{activeConversation.reservation_position}
               </p>
             </div>
             {role === 'host' && (
               <select 
                 value={activeConversation.status}
                 onChange={(e) => handleUpdateStatus(e.target.value)}
-                className="bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-[11px] text-white/70 focus:outline-none focus:border-white/30 cursor-pointer"
+                className="bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-white/60 focus:outline-none focus:border-white/30 cursor-pointer transition-all"
               >
                 <option value="contacted">Contacted</option>
                 <option value="in progress">In Progress</option>
@@ -143,15 +144,15 @@ export default function ReservationMessages({ role }: { role: 'host' | 'viewer' 
             )}
           </div>
 
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
+        <div className="flex-1 overflow-y-auto p-5 space-y-5 no-scrollbar">
           {messages.map((msg) => {
             const isMe = msg.sender_id === localParticipant.identity;
             const isSystem = msg.message_type === 'system';
 
             if (isSystem) {
               return (
-                <div key={msg.id} className="flex justify-center my-4">
-                  <div className="bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-[11px] px-4 py-2 rounded-full text-center max-w-[80%] whitespace-pre-wrap">
+                <div key={msg.id} className="flex justify-center my-6">
+                  <div className="bg-[#7C6CFF]/10 border border-[#7C6CFF]/20 text-[#7C6CFF] text-[10px] font-black uppercase tracking-widest px-5 py-2.5 rounded-full text-center max-w-[85%] whitespace-pre-wrap shadow-sm">
                     {msg.message_text}
                   </div>
                 </div>
@@ -159,37 +160,42 @@ export default function ReservationMessages({ role }: { role: 'host' | 'viewer' 
             }
 
             return (
-              <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
+              <motion.div 
+                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                key={msg.id} 
+                className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}
+              >
                 <div 
-                  className={`max-w-[75%] rounded-2xl px-4 py-2.5 text-[13px] ${
+                  className={`max-w-[80%] rounded-2xl px-5 py-3.5 text-[14px] font-medium leading-relaxed shadow-lg ${
                     isMe 
-                      ? 'bg-indigo-500 text-white rounded-br-sm' 
-                      : 'bg-white/10 text-white rounded-bl-sm border border-white/5'
+                      ? 'bg-[#7C6CFF] text-white rounded-br-sm' 
+                      : 'glass text-white rounded-bl-sm'
                   }`}
                 >
                   {msg.message_text}
                 </div>
-              </div>
+              </motion.div>
             );
           })}
           <div ref={messagesEndRef} />
         </div>
 
-        <form onSubmit={handleSendMessage} className="p-4 border-t border-white/10 bg-[#0A0A0A]">
-          <div className="flex items-center gap-2">
+        <form onSubmit={handleSendMessage} className="p-5 border-t border-white/5 bg-black/20">
+          <div className="flex items-center gap-3">
             <input
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Type a message..."
-              className="flex-1 bg-white/5 border border-white/10 rounded-full px-4 py-2.5 text-sm text-white focus:outline-none focus:border-white/30"
+              className="flex-1 glass rounded-full px-6 py-4 text-[14px] text-white focus:outline-none focus:ring-2 focus:ring-white/10 placeholder:text-white/20 font-medium"
             />
             <button 
               type="submit"
               disabled={!newMessage.trim()}
-              className="p-2.5 bg-indigo-500 text-white rounded-full hover:bg-indigo-600 transition-colors disabled:opacity-50 disabled:hover:bg-indigo-500 cursor-pointer"
+              className="btn-primary w-14 h-14 flex items-center justify-center disabled:opacity-30 disabled:grayscale transition-all"
             >
-              <Send size={18} />
+              <Send size={20} strokeWidth={3} className="text-white" />
             </button>
           </div>
         </form>
@@ -198,36 +204,41 @@ export default function ReservationMessages({ role }: { role: 'host' | 'viewer' 
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       {conversations.length === 0 ? (
-        <div className="text-center text-white/50 py-8">
-          <p>No messages yet.</p>
+        <div className="text-center py-12">
+          <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4 border border-white/5">
+            <MessageSquare size={24} className="text-white/20" />
+          </div>
+          <p className="text-white/30 font-black uppercase tracking-widest text-[10px]">No messages yet</p>
         </div>
       ) : (
         conversations.map((conv) => (
-          <button
+          <motion.button
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
             key={conv.id}
             onClick={() => {
               setActiveConversation(conv);
               fetchMessages(conv.id);
             }}
-            className="w-full text-left bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-colors cursor-pointer"
+            className="w-full text-left glass rounded-2xl p-5 hover:bg-white/10 transition-all cursor-pointer group shadow-lg"
           >
-            <div className="flex justify-between items-start mb-1">
-              <span className="font-bold text-sm text-white">
+            <div className="flex justify-between items-start mb-2">
+              <span className="font-black text-sm text-white tracking-tight group-hover:text-[#5EEAD4] transition-colors">
                 {role === 'host' ? conv.viewer_id : conv.host_id}
               </span>
-              <span className="text-[10px] text-white/40">
+              <span className="text-[10px] text-white/30 font-black uppercase tracking-widest">
                 {new Date(conv.last_message_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </span>
             </div>
-            <div className="text-xs text-white/70 mb-2">
+            <div className="text-[10px] text-white/40 font-black uppercase tracking-widest mb-3">
               {conv.drop_title} • {conv.option_selected} • #{conv.reservation_position}
             </div>
-            <p className="text-xs text-white/50 truncate">
-              {conv.last_message_type === 'system' ? 'System message' : conv.last_message}
+            <p className="text-xs text-white/60 truncate font-medium leading-relaxed">
+              {conv.last_message_type === 'system' ? 'System update' : conv.last_message}
             </p>
-          </button>
+          </motion.button>
         ))
       )}
     </div>

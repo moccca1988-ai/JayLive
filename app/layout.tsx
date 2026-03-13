@@ -6,7 +6,7 @@ import InstallPrompt from '@/components/InstallPrompt';
 const inter = Inter({ subsets: ['latin'] });
 
 export const viewport: Viewport = {
-  themeColor: '#0A0A0A',
+  themeColor: '#0B0B0F',
   viewportFit: 'cover',
 };
 
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={inter.className}>
-      <body className="bg-[#0A0A0A] text-white antialiased overflow-hidden" suppressHydrationWarning>
+      <body className="bg-[#0B0B0F] text-white antialiased overflow-hidden selection:bg-indigo-500/30" suppressHydrationWarning>
         {children}
         <InstallPrompt />
       </body>

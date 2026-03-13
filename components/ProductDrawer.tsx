@@ -47,16 +47,17 @@ export default function ProductDrawer({ isOpen, onClose }: ProductDrawerProps) {
                       "margin-bottom": "50px",
                       "width": "calc(25% - 20px)"
                     },
-                    "background-color": "#1A1A1A",
-                    "border": "1px solid #333333",
-                    "border-radius": "20px",
-                    "padding": "16px",
-                    "transition": "all 0.3s ease",
-                    "box-shadow": "0 2px 8px rgba(0,0,0,0.02)",
+                    "background-color": "rgba(255, 255, 255, 0.03)",
+                    "border": "1px solid rgba(255, 255, 255, 0.05)",
+                    "border-radius": "24px",
+                    "padding": "20px",
+                    "transition": "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                    "box-shadow": "0 8px 32px rgba(0,0,0,0.2)",
                     ":hover": {
-                      "background-color": "#222222",
-                      "border": "1px solid #444444",
-                      "box-shadow": "0 4px 12px rgba(0,0,0,0.04)",
+                      "background-color": "rgba(255, 255, 255, 0.06)",
+                      "border": "1px solid rgba(255, 255, 255, 0.1)",
+                      "transform": "translateY(-4px)",
+                      "box-shadow": "0 12px 40px rgba(0,0,0,0.3)",
                     },
                     "img": {
                       "height": "calc(100% - 15px)",
@@ -64,7 +65,7 @@ export default function ProductDrawer({ isOpen, onClose }: ProductDrawerProps) {
                       "left": "0",
                       "right": "0",
                       "top": "0",
-                      "border-radius": "12px"
+                      "border-radius": "18px"
                     },
                     "imgWrapper": {
                       "padding-top": "calc(75% + 15px)",
@@ -74,25 +75,32 @@ export default function ProductDrawer({ isOpen, onClose }: ProductDrawerProps) {
                   },
                   "title": {
                     "color": "#FFFFFF",
-                    "font-weight": "600",
-                    "font-size": "15px",
-                    "margin-top": "12px"
+                    "font-weight": "900",
+                    "font-size": "16px",
+                    "margin-top": "16px",
+                    "letter-spacing": "-0.02em"
                   },
                   "price": {
-                    "color": "#A3A3A3",
+                    "color": "rgba(255, 255, 255, 0.4)",
                     "font-size": "14px",
-                    "font-weight": "500"
+                    "font-weight": "900",
+                    "letter-spacing": "0.05em",
+                    "text-transform": "uppercase"
                   },
                   "button": {
-                    "background": "#FFFFFF",
-                    "color": "#000000",
-                    "border-radius": "100px",
-                    "font-weight": "600",
-                    "padding": "12px 24px",
-                    "transition": "all 0.2s ease",
+                    "background": "linear-gradient(135deg, #7C6CFF 0%, #5EEAD4 100%)",
+                    "color": "#FFFFFF",
+                    "border-radius": "14px",
+                    "font-weight": "900",
+                    "padding": "14px 28px",
+                    "text-transform": "uppercase",
+                    "letter-spacing": "0.1em",
+                    "font-size": "11px",
+                    "transition": "all 0.3s ease",
                     ":hover": {
-                      "background": "#E5E5E5",
-                      "transform": "scale(0.98)"
+                      "background": "linear-gradient(135deg, #8D7FFF 0%, #6FFBE5 100%)",
+                      "transform": "scale(0.98)",
+                      "box-shadow": "0 0 20px rgba(124, 108, 255, 0.3)"
                     }
                   }
                 },
@@ -193,47 +201,53 @@ export default function ProductDrawer({ isOpen, onClose }: ProductDrawerProps) {
           animate={{ y: 0 }}
           exit={{ y: '100%' }}
           transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-          className="fixed inset-x-0 bottom-0 z-50 h-[85vh] bg-[#141414] rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.5)] flex flex-col pt-3 border-t border-white/10"
+          className="fixed inset-x-0 bottom-0 z-50 h-[85vh] glass-card rounded-t-[40px] shadow-[0_-20px_60px_rgba(0,0,0,0.6)] flex flex-col pt-4 border-t border-white/10 overflow-hidden"
         >
           {/* Drag Handle Area */}
-          <div className="w-full flex justify-center pb-5 cursor-grab active:cursor-grabbing" onClick={onClose}>
-            <div className="w-12 h-1.5 bg-white/20 rounded-full" />
+          <div className="w-full flex justify-center pb-6 cursor-grab active:cursor-grabbing" onClick={onClose}>
+            <div className="w-16 h-1.5 bg-white/10 rounded-full" />
           </div>
 
           {/* Header */}
-          <div className="px-6 pb-5 flex items-center justify-between border-b border-white/10 sticky top-0 z-10 bg-[#141414]/80 backdrop-blur-xl">
-            <h2 className="text-xl font-semibold flex items-center gap-2 text-white tracking-tight">
-              <ShoppingBag size={20} className="text-white" />
-              Shop the Look
-            </h2>
+          <div className="px-8 pb-6 flex items-center justify-between border-b border-white/5 sticky top-0 z-10 bg-transparent backdrop-blur-xl">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-[#5EEAD4]/10 rounded-xl flex items-center justify-center border border-[#5EEAD4]/20">
+                <ShoppingBag size={20} className="text-[#5EEAD4]" />
+              </div>
+              <h2 className="text-2xl font-black text-white tracking-tight">
+                Shop the Look
+              </h2>
+            </div>
             <button
               onClick={onClose}
-              className="p-2.5 bg-white/5 rounded-full hover:bg-white/10 transition-colors text-white/70 hover:text-white"
+              className="p-2 bg-white/5 rounded-full hover:bg-white/10 transition-all text-white/40 hover:text-white active:scale-90"
             >
-              <X size={20} />
+              <X size={22} />
             </button>
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar relative bg-[#0A0A0A]">
+          <div className="flex-1 overflow-y-auto p-8 space-y-6 no-scrollbar relative bg-transparent">
             {loading && !error && (
-              <div className="absolute inset-0 flex flex-col justify-center items-center text-white/50 gap-4">
-                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-white"></div>
-                <p className="text-sm font-medium tracking-wide">Produkte werden geladen ...</p>
+              <div className="absolute inset-0 flex flex-col justify-center items-center text-white/50 gap-5">
+                <div className="w-12 h-12 border-4 border-white/5 border-t-[#5EEAD4] rounded-full animate-spin"></div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-white/30">Loading Collection...</p>
               </div>
             )}
             
             {error && (
-              <div className="absolute inset-0 flex flex-col justify-center items-center text-white/50 gap-3">
-                <ShoppingBag size={40} className="opacity-50" />
-                <p className="text-base font-medium">Shop momentan nicht verfügbar</p>
+              <div className="absolute inset-0 flex flex-col justify-center items-center text-white/50 gap-4">
+                <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center border border-white/5">
+                  <ShoppingBag size={32} className="text-white/20" />
+                </div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-white/30">Shop currently unavailable</p>
               </div>
             )}
 
             <div 
               id="collection-component-1773375176268" 
               ref={containerRef}
-              className={`w-full transition-opacity duration-500 ${loading ? 'opacity-0' : 'opacity-100'}`}
+              className={`w-full transition-opacity duration-700 ${loading ? 'opacity-0' : 'opacity-100'}`}
             ></div>
           </div>
         </motion.div>

@@ -67,17 +67,17 @@ export default function HostDashboard() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="absolute inset-4 md:inset-auto md:top-20 md:right-4 md:w-96 z-[130] bg-[#141414] rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden border border-white/10 pointer-events-auto"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className="absolute inset-4 md:inset-auto md:top-20 md:right-4 md:w-[420px] md:max-h-[85vh] z-[130] glass-card flex flex-col overflow-hidden pointer-events-auto"
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-white/10">
-              <h2 className="text-xl font-semibold text-white tracking-tight">Host Dashboard</h2>
+            <div className="flex items-center justify-between p-7 border-b border-white/5">
+              <h2 className="text-xl font-black text-white tracking-tight">Host Dashboard</h2>
               <button 
                 onClick={() => setIsOpen(false)} 
-                className="p-2.5 bg-white/5 rounded-full hover:bg-white/10 transition-colors text-white/70 hover:text-white cursor-pointer active:scale-95"
+                className="p-2 bg-white/5 rounded-full hover:bg-white/10 transition-all text-white/40 hover:text-white cursor-pointer active:scale-90"
                 aria-label="Close dashboard"
               >
                 <X size={20} />
@@ -85,27 +85,33 @@ export default function HostDashboard() {
             </div>
 
             {/* Tabs */}
-            <div className="flex border-b border-white/10 bg-[#0A0A0A] overflow-x-auto no-scrollbar">
+            <div className="flex border-b border-white/5 bg-black/20 overflow-x-auto no-scrollbar px-4">
               {(['stream', 'products', 'drops', 'messages', 'chat', 'stats'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`flex-none px-4 py-4 text-[13px] font-semibold capitalize transition-all cursor-pointer active:scale-95 ${
-                    activeTab === tab ? 'bg-[#141414] text-white shadow-sm rounded-t-xl border-t border-x border-white/10' : 'text-white/50 hover:text-white/80 hover:bg-white/5'
+                  className={`flex-none px-4 py-4 text-[12px] font-black uppercase tracking-[0.1em] transition-all cursor-pointer relative ${
+                    activeTab === tab ? 'text-white' : 'text-white/30 hover:text-white/60'
                   }`}
                 >
                   {tab}
+                  {activeTab === tab && (
+                    <motion.div 
+                      layoutId="activeTab"
+                      className="absolute bottom-0 left-4 right-4 h-0.5 bg-gradient-to-r from-[#7C6CFF] to-[#5EEAD4] rounded-full"
+                    />
+                  )}
                 </button>
               ))}
             </div>
 
             {/* Content */}
-            <div className="flex-1 p-6 overflow-y-auto no-scrollbar bg-[#141414]">
+            <div className="flex-1 p-7 overflow-y-auto no-scrollbar bg-transparent">
               {activeTab === 'stream' && (
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between bg-white/5 p-4 rounded-2xl border border-white/10">
-                    <span className="font-medium text-white">Status</span>
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${isStreaming ? 'bg-red-500/20 text-red-400 border border-red-500/30 animate-pulse' : 'bg-white/10 text-white/50'}`}>
+                <div className="space-y-8">
+                  <div className="flex items-center justify-between bg-white/5 p-5 rounded-2xl border border-white/5 shadow-inner">
+                    <span className="text-xs font-black uppercase tracking-widest text-white/40">Status</span>
+                    <span className={`px-4 py-1.5 rounded-full text-[10px] font-black tracking-widest ${isStreaming ? 'bg-[#EF4444]/15 text-[#EF4444] border border-[#EF4444]/20 animate-pulse' : 'bg-white/5 text-white/30 border border-white/5'}`}>
                       {isStreaming ? 'LIVE' : 'STANDBY'}
                     </span>
                   </div>
@@ -113,28 +119,28 @@ export default function HostDashboard() {
                   <div className="grid grid-cols-2 gap-4">
                     <button
                       onClick={toggleCamera}
-                      className={`flex flex-col items-center justify-center p-4 rounded-2xl border transition-all ${
-                        isCameraEnabled ? 'bg-white border-white text-black shadow-md' : 'bg-white/5 border-white/10 text-white/50 hover:bg-white/10'
+                      className={`flex flex-col items-center justify-center p-6 rounded-2xl border transition-all ${
+                        isCameraEnabled ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'bg-white/5 border-white/5 text-white/30 hover:bg-white/10'
                       }`}
                     >
-                      {isCameraEnabled ? <Video size={24} className="mb-2" /> : <VideoOff size={24} className="mb-2" />}
-                      <span className="text-sm font-medium">Camera</span>
+                      {isCameraEnabled ? <Video size={24} className="mb-3" /> : <VideoOff size={24} className="mb-3" />}
+                      <span className="text-xs font-black uppercase tracking-widest">Camera</span>
                     </button>
                     <button
                       onClick={toggleMic}
-                      className={`flex flex-col items-center justify-center p-4 rounded-2xl border transition-all ${
-                        isMicrophoneEnabled ? 'bg-white border-white text-black shadow-md' : 'bg-white/5 border-white/10 text-white/50 hover:bg-white/10'
+                      className={`flex flex-col items-center justify-center p-6 rounded-2xl border transition-all ${
+                        isMicrophoneEnabled ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'bg-white/5 border-white/5 text-white/30 hover:bg-white/10'
                       }`}
                     >
-                      {isMicrophoneEnabled ? <Mic size={24} className="mb-2" /> : <MicOff size={24} className="mb-2" />}
-                      <span className="text-sm font-medium">Mic</span>
+                      {isMicrophoneEnabled ? <Mic size={24} className="mb-3" /> : <MicOff size={24} className="mb-3" />}
+                      <span className="text-xs font-black uppercase tracking-widest">Mic</span>
                     </button>
                   </div>
 
                   {isStreaming ? (
                     <button
                       onClick={handleStopStream}
-                      className="w-full flex items-center justify-center gap-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 py-4 rounded-2xl font-bold transition-colors shadow-sm"
+                      className="w-full flex items-center justify-center gap-3 bg-[#EF4444]/10 hover:bg-[#EF4444]/20 text-[#EF4444] border border-[#EF4444]/20 py-5 rounded-2xl font-black uppercase tracking-widest transition-all active:scale-[0.98]"
                     >
                       <Square size={20} fill="currentColor" />
                       Stop Stream
@@ -142,7 +148,7 @@ export default function HostDashboard() {
                   ) : (
                     <button
                       onClick={handleGoLive}
-                      className="w-full flex items-center justify-center gap-2 bg-indigo-500 text-white hover:bg-indigo-600 py-4 rounded-2xl font-bold transition-all shadow-md shadow-indigo-500/20 active:scale-[0.98]"
+                      className="w-full btn-primary flex items-center justify-center gap-3 py-5 text-white font-black uppercase tracking-widest active:scale-[0.98]"
                     >
                       <Play size={20} fill="currentColor" />
                       Go Live
@@ -152,10 +158,12 @@ export default function HostDashboard() {
               )}
 
               {activeTab === 'products' && (
-                <div className="space-y-4 text-center text-white/50 py-8">
-                  <ShoppingBag size={48} className="mx-auto mb-4 opacity-50" />
-                  <p className="font-medium text-white">Product pinning coming soon.</p>
-                  <p className="text-sm">Manage your Shopify inventory here.</p>
+                <div className="space-y-4 text-center py-12">
+                  <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/5">
+                    <ShoppingBag size={32} className="text-white/20" />
+                  </div>
+                  <p className="font-black text-white tracking-tight">Product pinning coming soon</p>
+                  <p className="text-sm text-white/30 font-medium">Manage your Shopify inventory here.</p>
                 </div>
               )}
 
@@ -168,34 +176,36 @@ export default function HostDashboard() {
               )}
 
               {activeTab === 'chat' && (
-                <div className="space-y-4 text-center text-white/50 py-8">
-                  <MessageSquare size={48} className="mx-auto mb-4 opacity-50" />
-                  <p className="font-medium text-white">Chat moderation coming soon.</p>
-                  <p className="text-sm">View and moderate live chat messages.</p>
+                <div className="space-y-4 text-center py-12">
+                  <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/5">
+                    <MessageSquare size={32} className="text-white/20" />
+                  </div>
+                  <p className="font-black text-white tracking-tight">Chat moderation coming soon</p>
+                  <p className="text-sm text-white/30 font-medium">View and moderate live chat messages.</p>
                 </div>
               )}
 
               {activeTab === 'stats' && (
                 <div className="space-y-4">
-                  <div className="bg-white/5 p-4 rounded-2xl border border-white/10 flex items-center gap-4">
-                    <div className="bg-white/10 p-3 rounded-xl shadow-sm border border-white/5"><Users size={20} className="text-white/80" /></div>
+                  <div className="bg-white/5 p-5 rounded-2xl border border-white/5 flex items-center gap-5 shadow-inner">
+                    <div className="bg-white/5 p-3.5 rounded-xl border border-white/5"><Users size={20} className="text-[#5EEAD4]" /></div>
                     <div>
-                      <p className="text-sm text-white/50 font-medium">Viewers</p>
-                      <p className="text-xl font-bold text-white">{participants.length}</p>
+                      <p className="text-[10px] text-white/30 font-black uppercase tracking-widest mb-1">Viewers</p>
+                      <p className="text-2xl font-black text-white tracking-tight">{participants.length}</p>
                     </div>
                   </div>
-                  <div className="bg-white/5 p-4 rounded-2xl border border-white/10 flex items-center gap-4">
-                    <div className="bg-white/10 p-3 rounded-xl shadow-sm border border-white/5"><MessageSquare size={20} className="text-white/80" /></div>
+                  <div className="bg-white/5 p-5 rounded-2xl border border-white/5 flex items-center gap-5 shadow-inner">
+                    <div className="bg-white/5 p-3.5 rounded-xl border border-white/5"><MessageSquare size={20} className="text-[#7C6CFF]" /></div>
                     <div>
-                      <p className="text-sm text-white/50 font-medium">Chat Messages</p>
-                      <p className="text-xl font-bold text-white">--</p>
+                      <p className="text-[10px] text-white/30 font-black uppercase tracking-widest mb-1">Chat Messages</p>
+                      <p className="text-2xl font-black text-white tracking-tight">--</p>
                     </div>
                   </div>
-                  <div className="bg-white/5 p-4 rounded-2xl border border-white/10 flex items-center gap-4">
-                    <div className="bg-white/10 p-3 rounded-xl shadow-sm border border-white/5"><Clock size={20} className="text-white/80" /></div>
+                  <div className="bg-white/5 p-5 rounded-2xl border border-white/5 flex items-center gap-5 shadow-inner">
+                    <div className="bg-white/5 p-3.5 rounded-xl border border-white/5"><Clock size={20} className="text-[#F59E0B]" /></div>
                     <div>
-                      <p className="text-sm text-white/50 font-medium">Stream Duration</p>
-                      <p className="text-xl font-bold text-white">{isStreaming ? 'Live' : '00:00:00'}</p>
+                      <p className="text-[10px] text-white/30 font-black uppercase tracking-widest mb-1">Duration</p>
+                      <p className="text-2xl font-black text-white tracking-tight">{isStreaming ? 'Live' : '00:00:00'}</p>
                     </div>
                   </div>
                 </div>
