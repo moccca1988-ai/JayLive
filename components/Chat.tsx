@@ -25,7 +25,7 @@ export default function Chat() {
   };
 
   return (
-    <div className="absolute bottom-6 left-4 w-[calc(100vw-140px)] max-w-[320px] max-h-64 flex flex-col justify-end pointer-events-none z-40">
+    <div className="absolute bottom-8 left-4 right-4 md:right-auto md:w-[320px] max-h-64 flex flex-col justify-end pointer-events-none z-40 pb-safe">
       <div className="overflow-y-auto mb-3 flex flex-col gap-2 no-scrollbar pointer-events-auto max-h-48 mask-image-b-fade">
         {chatMessages.map((msg, idx) => (
           <div key={idx} className="bg-black/20 backdrop-blur-xl border border-white/10 rounded-2xl px-3.5 py-2 text-[14px] w-fit max-w-full break-words shadow-sm">

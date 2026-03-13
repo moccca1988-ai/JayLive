@@ -48,30 +48,33 @@ function LiveOverlay({ isHost }: { isHost: boolean }) {
       </div>
 
       {/* UI Overlays */}
-      <div className="fixed inset-0 z-10 pointer-events-none">
+      <div className="fixed inset-0 z-[100] pointer-events-none">
         {/* Top Left: LIVE Badge */}
         <div className="absolute top-12 left-4 flex items-center gap-2 bg-black/30 backdrop-blur-xl border border-white/10 rounded-full px-3.5 py-1.5 pointer-events-auto shadow-sm">
           <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.6)]" />
           <span className="text-[11px] font-bold tracking-widest text-white uppercase">Live</span>
         </div>
 
-        {/* Top Right: Viewer Counter */}
-        <div className="absolute top-12 right-4 flex items-center gap-1.5 bg-black/30 backdrop-blur-xl border border-white/10 rounded-full px-3.5 py-1.5 pointer-events-auto shadow-sm">
-          <Users size={14} className="text-white/90" />
-          <span className="text-[13px] font-semibold text-white">{participants.length}</span>
+        {/* Top Right: Viewer Counter & Shop Button Stack */}
+        <div className="absolute top-12 right-4 flex flex-col items-end gap-3 pointer-events-none">
+          {/* Viewer Counter */}
+          <div className="flex items-center gap-1.5 bg-black/30 backdrop-blur-xl border border-white/10 rounded-full px-3.5 py-1.5 pointer-events-auto shadow-sm">
+            <Users size={14} className="text-white/90" />
+            <span className="text-[13px] font-semibold text-white">{participants.length}</span>
+          </div>
+
+          {/* Shopping Button */}
+          <button
+            onClick={() => setIsDrawerOpen(true)}
+            className="bg-white/10 backdrop-blur-xl border border-white/20 text-white rounded-full px-4 py-2.5 shadow-2xl shadow-black/50 hover:bg-white/20 hover:scale-105 active:scale-95 transition-all pointer-events-auto flex items-center justify-center gap-2 font-semibold"
+          >
+            <ShoppingBag size={18} strokeWidth={2.5} />
+            <span className="text-[14px]">Shop</span>
+          </button>
         </div>
 
         {/* Bottom Left: Chat */}
         <Chat />
-
-        {/* Bottom Right: Shopping Button */}
-        <button
-          onClick={() => setIsDrawerOpen(true)}
-          className="absolute bottom-6 right-4 bg-white/10 backdrop-blur-xl border border-white/20 text-white rounded-full px-5 py-3.5 shadow-2xl shadow-black/50 hover:bg-white/20 hover:scale-105 active:scale-95 transition-all pointer-events-auto flex items-center justify-center gap-2 font-semibold"
-        >
-          <ShoppingBag size={20} strokeWidth={2.5} />
-          <span className="text-[15px]">Shop</span>
-        </button>
 
         {/* Host Dashboard */}
         {isHost && <HostDashboard />}

@@ -53,12 +53,14 @@ export default function HostDashboard() {
 
   return (
     <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="absolute top-12 right-24 z-50 bg-black/30 backdrop-blur-xl border border-white/10 rounded-full p-2.5 hover:bg-black/40 transition-all shadow-sm"
-      >
-        <Settings size={20} className="text-white" />
-      </button>
+      <div className="absolute top-12 right-24 z-[120] pointer-events-auto">
+        <button
+          onClick={() => setIsOpen(true)}
+          className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-full p-2.5 hover:bg-black/40 transition-all shadow-sm"
+        >
+          <Settings size={20} className="text-white" />
+        </button>
+      </div>
 
       <AnimatePresence>
         {isOpen && (
