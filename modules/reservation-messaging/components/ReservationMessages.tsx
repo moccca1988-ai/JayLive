@@ -1,44 +1,46 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocalParticipant } from '@livekit/components-react';
 import { Send, ArrowLeft } from 'lucide-react';
 
+import { Conversation, Message } from '@/modules/reservation-messaging/server/db';
+
 export default function ReservationMessages({ role }: { role: 'host' | 'viewer' }) {
   const { localParticipant } = useLocalParticipant();
-  const [conversations, setConversations] = useState<any[]>([]);
-  const [activeConversation, setActiveConversation] = useState<any | null>(null);
-  const [messages, setMessages] = useState<any[]>([]);
+  const [conversations, setConversations] = useState<(Conversation & { drop_title: string, last_message: string, last_message_type: string })[]>([]);
+  const [activeConversation, setActiveConversation] = useState<(Conversation & { drop_title: string }) | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const fetchConversations = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/reservation-messaging/conversations?userId=${encodeURIComponent(localParticipant.identity)}&role=${role}`);
+      const data = await res.json();
+      setConversations(data.conversations || []);
+    } catch (e) {
+      console.error('Failed to fetch conversations', e);
+    } finally {
+      setLoading(false);
+    }
+  }, [localParticipant.identity, role]);
+
+  const fetchMessages = useCallback(async (conversationId: string) => {
+    try {
+      const res = await fetch(`/api/reservation-messaging/messages?conversationId=${conversationId}&userId=${encodeURIComponent(localParticipant.identity)}`);
+      const data = await res.json();
+      setMessages(data.messages || []);
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } catch (e) {
+      console.error('Failed to fetch messages', e);
+    }
+  }, [localParticipant.identity]);
+
   useEffect(() => {
-    const fetchConversations = async () => {
-      try {
-        const res = await fetch(`/api/reservation-messaging/conversations?userId=${encodeURIComponent(localParticipant.identity)}&role=${role}`);
-        const data = await res.json();
-        setConversations(data.conversations || []);
-      } catch (e) {
-        console.error('Failed to fetch conversations', e);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const fetchMessages = async (conversationId: string) => {
-      try {
-        const res = await fetch(`/api/reservation-messaging/messages?conversationId=${conversationId}&userId=${encodeURIComponent(localParticipant.identity)}`);
-        const data = await res.json();
-        setMessages(data.messages || []);
-        setTimeout(() => {
-          messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-      } catch (e) {
-        console.error('Failed to fetch messages', e);
-      }
-    };
-
     fetchConversations();
     const interval = setInterval(() => {
       fetchConversations();
@@ -48,7 +50,27 @@ export default function ReservationMessages({ role }: { role: 'host' | 'viewer' 
     }, 5000); // Poll every 5 seconds
 
     return () => clearInterval(interval);
-  }, [localParticipant.identity, activeConversation, role]);
+  }, [fetchConversations, fetchMessages, activeConversation]);
+
+  const handleUpdateStatus = async (status: string) => {
+    if (!activeConversation) return;
+
+    try {
+      await fetch('/api/reservation-messaging/conversations', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          conversationId: activeConversation.id,
+          userId: localParticipant.identity,
+          status,
+        }),
+      });
+      setActiveConversation(prev => prev ? { ...prev, status: status as any } : null);
+      fetchConversations();
+    } catch (e) {
+      console.error('Failed to update status', e);
+    }
+  };
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,12 +80,12 @@ export default function ReservationMessages({ role }: { role: 'host' | 'viewer' 
     setNewMessage('');
 
     // Optimistic update
-    const tempMessage = {
+    const tempMessage: Message = {
       id: Date.now().toString(),
       conversation_id: activeConversation.id,
       sender_id: localParticipant.identity,
       message_text: text,
-      message_type: 'user',
+      message_type: 'user' as const,
       created_at: Date.now(),
     };
     setMessages(prev => [...prev, tempMessage]);
@@ -94,20 +116,32 @@ export default function ReservationMessages({ role }: { role: 'host' | 'viewer' 
   if (activeConversation) {
     return (
       <div className="flex flex-col h-full bg-[#141414]">
-        <div className="flex items-center gap-3 p-4 border-b border-white/10">
-          <button 
-            onClick={() => setActiveConversation(null)}
-            className="p-2 bg-white/5 rounded-full hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer"
-          >
-            <ArrowLeft size={18} />
-          </button>
-          <div>
-            <h3 className="text-sm font-bold text-white">{activeConversation.drop_title}</h3>
-            <p className="text-xs text-white/50">
-              {role === 'host' ? activeConversation.viewer_id : activeConversation.host_id} • Option: {activeConversation.option_selected} • #{activeConversation.reservation_position}
-            </p>
+          <div className="flex items-center gap-3 p-4 border-b border-white/10">
+            <button 
+              onClick={() => setActiveConversation(null)}
+              className="p-2 bg-white/5 rounded-full hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer"
+            >
+              <ArrowLeft size={18} />
+            </button>
+            <div className="flex-1">
+              <h3 className="text-sm font-bold text-white">{activeConversation.drop_title}</h3>
+              <p className="text-xs text-white/50">
+                {role === 'host' ? activeConversation.viewer_id : activeConversation.host_id} • Option: {activeConversation.option_selected} • #{activeConversation.reservation_position}
+              </p>
+            </div>
+            {role === 'host' && (
+              <select 
+                value={activeConversation.status}
+                onChange={(e) => handleUpdateStatus(e.target.value)}
+                className="bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-[11px] text-white/70 focus:outline-none focus:border-white/30 cursor-pointer"
+              >
+                <option value="contacted">Contacted</option>
+                <option value="in progress">In Progress</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            )}
           </div>
-        </div>
 
         <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar">
           {messages.map((msg) => {

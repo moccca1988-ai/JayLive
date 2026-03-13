@@ -23,7 +23,7 @@ export interface DropReservation {
   id: string;
   drop_id: string;
   user_id: string;
-  option_value: string;
+  option_id: string;
   position: number;
   created_at: number;
   contacted?: boolean;

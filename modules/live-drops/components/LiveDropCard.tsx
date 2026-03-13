@@ -115,7 +115,7 @@ export default function LiveDropCard() {
           <div className="mt-3 bg-green-500/10 border border-green-500/20 rounded-xl p-3 text-center">
             <Check className="mx-auto text-green-400 mb-1" size={20} />
             <p className="text-green-400 text-xs font-bold uppercase tracking-wider mb-0.5">Reservation successful</p>
-            <p className="text-white/80 text-xs">You are position #{userReservation.position} for {displayLabel.toLowerCase()} {userReservation.option_value}</p>
+            <p className="text-white/80 text-xs">You are position #{userReservation.position} for {displayLabel.toLowerCase()} {options.find(o => o.id === userReservation.option_id)?.option_value}</p>
           </div>
         ) : drop.status === 'FULL' ? (
           <div className="mt-3 bg-white/5 border border-white/10 rounded-xl p-3 text-center">

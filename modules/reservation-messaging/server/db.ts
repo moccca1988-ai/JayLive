@@ -3,6 +3,7 @@ export type ConversationStatus = 'contacted' | 'in progress' | 'completed' | 'ca
 export interface Conversation {
   id: string;
   drop_id: string;
+  reservation_id: string;
   host_id: string;
   viewer_id: string;
   option_selected: string;

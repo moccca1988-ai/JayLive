@@ -37,3 +37,30 @@ export async function GET(req: Request) {
 
   return NextResponse.json({ conversations: enrichedConversations });
 }
+
+export async function PATCH(req: Request) {
+  const { conversationId, userId, status } = await req.json();
+
+  if (!conversationId || !userId || !status) {
+    return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+  }
+
+  const conversation = messagingDb.conversations.find(c => c.id === conversationId);
+  if (!conversation) {
+    return NextResponse.json({ error: 'Conversation not found' }, { status: 404 });
+  }
+
+  // Only host can update status
+  if (conversation.host_id !== userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+  }
+
+  const validStatuses = ['contacted', 'in progress', 'completed', 'cancelled'];
+  if (!validStatuses.includes(status)) {
+    return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
+  }
+
+  conversation.status = status as any;
+
+  return NextResponse.json({ success: true, conversation });
+}

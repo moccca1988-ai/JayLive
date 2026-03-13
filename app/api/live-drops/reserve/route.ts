@@ -34,7 +34,7 @@ export async function POST(req: Request) {
     id: Date.now().toString() + Math.random().toString(36).substring(7),
     drop_id: dropId,
     user_id: userId,
-    option_value: optionValue,
+    option_id: dropOption.id,
     position,
     created_at: Date.now(),
     contacted: false
@@ -47,6 +47,7 @@ export async function POST(req: Request) {
   const conversation: Conversation = {
     id: conversationId,
     drop_id: dropId,
+    reservation_id: reservation.id,
     host_id: drop.host_id,
     viewer_id: userId,
     option_selected: optionValue,

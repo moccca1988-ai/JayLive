@@ -176,7 +176,7 @@ export default function HostDropManager() {
           <div className="space-y-4">
             <h4 className="text-sm font-semibold text-white/70">Reservations:</h4>
             {options.map(s => {
-              const optionReservations = reservations.filter(r => r.option_value === s.option_value).sort((a, b) => a.position - b.position);
+              const optionReservations = reservations.filter(r => r.option_id === s.id).sort((a, b) => a.position - b.position);
               if (optionReservations.length === 0) return null;
               
               return (

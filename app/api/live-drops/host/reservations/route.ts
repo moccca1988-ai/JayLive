@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     db.drop_reservations = db.drop_reservations.filter(r => r.id !== reservationId);
     
     // Decrease reserved count
-    const dropOption = db.drop_options.find(s => s.drop_id === reservation.drop_id && s.option_value === reservation.option_value);
+    const dropOption = db.drop_options.find(s => s.id === reservation.option_id);
     if (dropOption) {
       dropOption.reserved = Math.max(0, dropOption.reserved - 1);
     }
