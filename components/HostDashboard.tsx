@@ -164,8 +164,8 @@ export default function HostDashboard() {
                 <div className="space-y-6">
                   <div className="space-y-2">
                     <label className="text-xs font-black uppercase tracking-widest text-white/40">Resolution</label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {(['auto', '720p', '1080p', '4k'] as const).map((q) => (
+                    <div className="grid grid-cols-3 gap-2">
+                      {(['auto', '720p', '1080p'] as const).map((q) => (
                         <button
                           key={q}
                           onClick={() => setCameraQuality(q)}
