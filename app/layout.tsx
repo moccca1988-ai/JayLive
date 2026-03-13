@@ -5,7 +5,7 @@ import '../styles/globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const viewport: Viewport = {
-  themeColor: '#000000',
+  themeColor: '#FAFAFA',
   viewportFit: 'cover',
 };
 
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description: 'Premium Fashion Live Shopping Experience',
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'black-translucent',
+    statusBarStyle: 'default',
     title: 'Jay Jaym Live',
   },
 };
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={inter.className}>
-      <body className="bg-black text-white antialiased overflow-hidden" suppressHydrationWarning>
+      <body className="bg-[#FAFAFA] text-gray-900 antialiased overflow-hidden" suppressHydrationWarning>
         {children}
       </body>
     </html>

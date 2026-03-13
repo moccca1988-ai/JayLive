@@ -20,6 +20,11 @@
 }
 
 body {
-  background-color: #000000;
-  color: #ffffff;
+  background-color: #FAFAFA;
+  color: #111827;
+}
+
+.mask-image-b-fade {
+  mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
 }

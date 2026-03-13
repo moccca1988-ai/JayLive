@@ -33,7 +33,7 @@ function LiveOverlay({ isHost }: { isHost: boolean }) {
   return (
     <>
       {/* Fullscreen Video Background */}
-      <div className="fixed inset-0 z-0 bg-black">
+      <div className="fixed inset-0 z-0 bg-[#FAFAFA]">
         {hostTrack ? (
           <ParticipantTile
             trackRef={hostTrack}
@@ -41,7 +41,7 @@ function LiveOverlay({ isHost }: { isHost: boolean }) {
             disableSpeakingIndicator
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-white/50 text-xl font-light">
+          <div className="w-full h-full flex items-center justify-center text-gray-400 text-xl font-light">
             Stream startet gleich
           </div>
         )}
@@ -50,15 +50,15 @@ function LiveOverlay({ isHost }: { isHost: boolean }) {
       {/* UI Overlays */}
       <div className="fixed inset-0 z-10 pointer-events-none">
         {/* Top Left: LIVE Badge */}
-        <div className="absolute top-12 left-4 flex items-center gap-2 bg-black/40 backdrop-blur-md border border-white/10 rounded-full px-4 py-2 pointer-events-auto">
-          <div className="w-2.5 h-2.5 bg-red-500 rounded-full animate-live" />
-          <span className="text-sm font-bold tracking-widest text-white">LIVE</span>
+        <div className="absolute top-12 left-4 flex items-center gap-2 bg-black/30 backdrop-blur-xl border border-white/10 rounded-full px-3.5 py-1.5 pointer-events-auto shadow-sm">
+          <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.6)]" />
+          <span className="text-[11px] font-bold tracking-widest text-white uppercase">Live</span>
         </div>
 
         {/* Top Right: Viewer Counter */}
-        <div className="absolute top-12 right-4 flex items-center gap-2 bg-black/40 backdrop-blur-md border border-white/10 rounded-full px-4 py-2 pointer-events-auto">
-          <Users size={16} className="text-white/80" />
-          <span className="text-sm font-medium text-white">{participants.length}</span>
+        <div className="absolute top-12 right-4 flex items-center gap-1.5 bg-black/30 backdrop-blur-xl border border-white/10 rounded-full px-3.5 py-1.5 pointer-events-auto shadow-sm">
+          <Users size={14} className="text-white/90" />
+          <span className="text-[13px] font-semibold text-white">{participants.length}</span>
         </div>
 
         {/* Bottom Left: Chat */}
@@ -67,9 +67,10 @@ function LiveOverlay({ isHost }: { isHost: boolean }) {
         {/* Bottom Right: Shopping Button */}
         <button
           onClick={() => setIsDrawerOpen(true)}
-          className="absolute bottom-20 right-4 bg-white text-black rounded-full p-4 shadow-2xl hover:scale-105 transition-transform pointer-events-auto flex items-center justify-center"
+          className="absolute bottom-6 right-4 bg-white text-black rounded-full px-5 py-3.5 shadow-2xl shadow-black/20 hover:scale-105 active:scale-95 transition-all pointer-events-auto flex items-center justify-center gap-2 font-semibold"
         >
-          <ShoppingBag size={24} fill="currentColor" />
+          <ShoppingBag size={20} strokeWidth={2.5} />
+          <span className="text-[15px]">Shop</span>
         </button>
 
         {/* Host Dashboard */}
@@ -87,7 +88,7 @@ export default function LiveExperience({ token, isHost }: LiveExperienceProps) {
 
   if (!serverUrl) {
     return (
-      <div className="flex items-center justify-center h-screen bg-black text-white">
+      <div className="flex items-center justify-center h-screen bg-[#FAFAFA] text-gray-900">
         <p>LiveKit URL is missing.</p>
       </div>
     );
@@ -100,7 +101,7 @@ export default function LiveExperience({ token, isHost }: LiveExperienceProps) {
       token={token}
       serverUrl={serverUrl}
       data-lk-theme="default"
-      className="h-screen w-full relative bg-black"
+      className="h-screen w-full relative bg-[#FAFAFA]"
     >
       <LiveOverlay isHost={isHost} />
       <RoomAudioRenderer />

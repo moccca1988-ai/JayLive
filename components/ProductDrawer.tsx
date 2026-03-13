@@ -42,14 +42,16 @@ export default function ProductDrawer({ isOpen, onClose }: ProductDrawerProps) {
                       "margin-bottom": "50px",
                       "width": "calc(25% - 20px)"
                     },
-                    "background-color": "rgba(255, 255, 255, 0.03)",
-                    "border": "1px solid rgba(255, 255, 255, 0.08)",
-                    "border-radius": "16px",
+                    "background-color": "#ffffff",
+                    "border": "1px solid #f3f4f6",
+                    "border-radius": "20px",
                     "padding": "16px",
                     "transition": "all 0.3s ease",
+                    "box-shadow": "0 2px 8px rgba(0,0,0,0.02)",
                     ":hover": {
-                      "background-color": "rgba(255, 255, 255, 0.08)",
-                      "border": "1px solid rgba(255, 255, 255, 0.15)",
+                      "background-color": "#fafafa",
+                      "border": "1px solid #e5e7eb",
+                      "box-shadow": "0 4px 12px rgba(0,0,0,0.04)",
                     },
                     "img": {
                       "height": "calc(100% - 15px)",
@@ -57,7 +59,7 @@ export default function ProductDrawer({ isOpen, onClose }: ProductDrawerProps) {
                       "left": "0",
                       "right": "0",
                       "top": "0",
-                      "border-radius": "8px"
+                      "border-radius": "12px"
                     },
                     "imgWrapper": {
                       "padding-top": "calc(75% + 15px)",
@@ -66,26 +68,26 @@ export default function ProductDrawer({ isOpen, onClose }: ProductDrawerProps) {
                     }
                   },
                   "title": {
-                    "color": "#ffffff",
+                    "color": "#111827",
                     "font-weight": "600",
                     "font-size": "15px",
                     "margin-top": "12px"
                   },
                   "price": {
-                    "color": "rgba(255, 255, 255, 0.8)",
+                    "color": "#4b5563",
                     "font-size": "14px",
                     "font-weight": "500"
                   },
                   "button": {
-                    "background": "linear-gradient(135deg, #4f46e5 0%, #2563eb 100%)",
+                    "background": "#000000",
                     "color": "#ffffff",
-                    "border-radius": "8px",
+                    "border-radius": "100px",
                     "font-weight": "600",
-                    "padding": "10px 20px",
-                    "transition": "opacity 0.2s ease",
+                    "padding": "12px 24px",
+                    "transition": "all 0.2s ease",
                     ":hover": {
-                      "background": "linear-gradient(135deg, #4338ca 0%, #1d4ed8 100%)",
-                      "opacity": "0.9"
+                      "background": "#1f2937",
+                      "transform": "scale(0.98)"
                     }
                   }
                 },
@@ -186,38 +188,38 @@ export default function ProductDrawer({ isOpen, onClose }: ProductDrawerProps) {
           animate={{ y: 0 }}
           exit={{ y: '100%' }}
           transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-          className="fixed inset-x-0 bottom-0 z-50 h-[85vh] bg-black/90 backdrop-blur-xl border-t border-white/10 rounded-t-[28px] shadow-2xl flex flex-col pt-3"
+          className="fixed inset-x-0 bottom-0 z-50 h-[85vh] bg-white rounded-t-[32px] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] flex flex-col pt-3"
         >
           {/* Drag Handle Area */}
           <div className="w-full flex justify-center pb-5 cursor-grab active:cursor-grabbing" onClick={onClose}>
-            <div className="w-14 h-1.5 bg-white/20 rounded-full" />
+            <div className="w-12 h-1.5 bg-gray-200 rounded-full" />
           </div>
 
           {/* Header */}
-          <div className="px-6 pb-5 flex items-center justify-between border-b border-white/10 sticky top-0 z-10">
-            <h2 className="text-xl font-semibold flex items-center gap-2 text-white tracking-wide">
-              <ShoppingBag size={20} className="text-white/80" />
+          <div className="px-6 pb-5 flex items-center justify-between border-b border-gray-100 sticky top-0 z-10 bg-white/80 backdrop-blur-xl">
+            <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-900 tracking-tight">
+              <ShoppingBag size={20} className="text-gray-900" />
               Shop the Look
             </h2>
             <button
               onClick={onClose}
-              className="p-2.5 bg-white/5 rounded-full hover:bg-white/15 transition-colors text-white/80 hover:text-white border border-white/5"
+              className="p-2.5 bg-gray-50 rounded-full hover:bg-gray-100 transition-colors text-gray-500 hover:text-gray-900"
             >
               <X size={20} />
             </button>
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar relative">
+          <div className="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar relative bg-gray-50/30">
             {loading && !error && (
-              <div className="absolute inset-0 flex flex-col justify-center items-center text-white/60 gap-4">
-                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-white/80"></div>
+              <div className="absolute inset-0 flex flex-col justify-center items-center text-gray-400 gap-4">
+                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gray-900"></div>
                 <p className="text-sm font-medium tracking-wide">Produkte werden geladen ...</p>
               </div>
             )}
             
             {error && (
-              <div className="absolute inset-0 flex flex-col justify-center items-center text-white/50 gap-3">
+              <div className="absolute inset-0 flex flex-col justify-center items-center text-gray-400 gap-3">
                 <ShoppingBag size={40} className="opacity-50" />
                 <p className="text-base font-medium">Shop momentan nicht verfügbar</p>
               </div>

@@ -25,12 +25,12 @@ export default function Chat() {
   };
 
   return (
-    <div className="absolute bottom-20 left-4 w-72 max-h-64 flex flex-col justify-end pointer-events-none z-40">
-      <div className="overflow-y-auto mb-4 flex flex-col gap-2 no-scrollbar pointer-events-auto max-h-48">
+    <div className="absolute bottom-6 left-4 w-[calc(100vw-140px)] max-w-[320px] max-h-64 flex flex-col justify-end pointer-events-none z-40">
+      <div className="overflow-y-auto mb-3 flex flex-col gap-2 no-scrollbar pointer-events-auto max-h-48 mask-image-b-fade">
         {chatMessages.map((msg, idx) => (
-          <div key={idx} className="bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl p-2 text-sm w-fit max-w-full break-words">
-            <span className="font-bold text-white/80 mr-2">{msg.from?.name || 'User'}:</span>
-            <span className="text-white">{msg.message}</span>
+          <div key={idx} className="bg-black/20 backdrop-blur-xl border border-white/10 rounded-2xl px-3.5 py-2 text-[14px] w-fit max-w-full break-words shadow-sm">
+            <span className="font-semibold text-white/70 mr-2">{msg.from?.name || 'User'}</span>
+            <span className="text-white/95">{msg.message}</span>
           </div>
         ))}
         <div ref={messagesEndRef} />
@@ -42,14 +42,14 @@ export default function Chat() {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Sag etwas..."
-          className="flex-1 bg-black/40 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-white/50 text-white placeholder:text-white/50"
+          className="flex-1 bg-black/30 backdrop-blur-xl border border-white/20 rounded-full px-5 py-3 text-[15px] focus:outline-none focus:border-white/40 text-white placeholder:text-white/60 shadow-sm transition-colors"
         />
         <button
           type="submit"
           disabled={isSending || !message.trim()}
-          className="bg-white/20 backdrop-blur-md border border-white/20 rounded-full p-2 flex items-center justify-center hover:bg-white/30 transition-colors disabled:opacity-50"
+          className="bg-white text-black rounded-full p-3 flex items-center justify-center hover:bg-gray-200 active:scale-95 transition-all disabled:opacity-50 disabled:active:scale-100 shadow-sm"
         >
-          <Send size={18} className="text-white" />
+          <Send size={18} strokeWidth={2.5} />
         </button>
       </form>
     </div>
