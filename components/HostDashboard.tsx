@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Settings, X, Video, Mic, VideoOff, MicOff, Play, Square, Users, MessageSquare, Clock, ShoppingBag } from 'lucide-react';
+import { Settings, X, Video, Mic, VideoOff, MicOff, Play, Square, Users, MessageSquare, Clock, ShoppingBag, Package } from 'lucide-react';
 import { useLocalParticipant, useRoomContext, useParticipants } from '@livekit/components-react';
 import { RoomEvent } from 'livekit-client';
+import HostDropManager from '@/modules/live-drops/components/HostDropManager';
 
 export default function HostDashboard() {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'stream' | 'products' | 'chat' | 'stats'>('stream');
+  const [activeTab, setActiveTab] = useState<'stream' | 'products' | 'drops' | 'chat' | 'stats'>('stream');
   const { localParticipant, isMicrophoneEnabled, isCameraEnabled } = useLocalParticipant();
   const room = useRoomContext();
   const participants = useParticipants();
@@ -68,24 +69,28 @@ export default function HostDashboard() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="absolute inset-4 md:inset-auto md:top-20 md:right-4 md:w-96 z-50 bg-[#141414] rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden border border-white/10"
+            className="absolute inset-4 md:inset-auto md:top-20 md:right-4 md:w-96 z-[130] bg-[#141414] rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden border border-white/10 pointer-events-auto"
           >
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-white/10">
               <h2 className="text-xl font-semibold text-white tracking-tight">Host Dashboard</h2>
-              <button onClick={() => setIsOpen(false)} className="p-2 bg-white/5 rounded-full hover:bg-white/10 transition-colors text-white/70 hover:text-white">
+              <button 
+                onClick={() => setIsOpen(false)} 
+                className="p-2.5 bg-white/5 rounded-full hover:bg-white/10 transition-colors text-white/70 hover:text-white cursor-pointer active:scale-95"
+                aria-label="Close dashboard"
+              >
                 <X size={20} />
               </button>
             </div>
 
             {/* Tabs */}
             <div className="flex border-b border-white/10 bg-[#0A0A0A]">
-              {(['stream', 'products', 'chat', 'stats'] as const).map((tab) => (
+              {(['stream', 'products', 'drops', 'chat', 'stats'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`flex-1 py-3.5 text-[13px] font-semibold capitalize transition-all ${
-                    activeTab === tab ? 'bg-[#141414] text-white shadow-sm rounded-t-xl border-t border-x border-white/10' : 'text-white/50 hover:text-white/80'
+                  className={`flex-1 py-4 text-[13px] font-semibold capitalize transition-all cursor-pointer active:scale-95 ${
+                    activeTab === tab ? 'bg-[#141414] text-white shadow-sm rounded-t-xl border-t border-x border-white/10' : 'text-white/50 hover:text-white/80 hover:bg-white/5'
                   }`}
                 >
                   {tab}
@@ -151,6 +156,10 @@ export default function HostDashboard() {
                   <p className="font-medium text-white">Product pinning coming soon.</p>
                   <p className="text-sm">Manage your Shopify inventory here.</p>
                 </div>
+              )}
+
+              {activeTab === 'drops' && (
+                <HostDropManager />
               )}
 
               {activeTab === 'chat' && (

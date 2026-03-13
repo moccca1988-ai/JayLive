@@ -14,6 +14,7 @@ import { Users, ShoppingBag } from 'lucide-react';
 import Chat from './Chat';
 import ProductDrawer from './ProductDrawer';
 import HostDashboard from './HostDashboard';
+import LiveDropCard from '@/modules/live-drops/components/LiveDropCard';
 import { Track, VideoPresets } from 'livekit-client';
 
 interface LiveExperienceProps {
@@ -72,6 +73,9 @@ function LiveOverlay({ isHost }: { isHost: boolean }) {
             <span className="text-[14px]">Shop</span>
           </button>
         </div>
+
+        {/* Live Drop Card */}
+        <LiveDropCard />
 
         {/* Bottom Left: Chat */}
         <Chat />
