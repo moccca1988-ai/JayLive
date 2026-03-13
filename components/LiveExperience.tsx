@@ -10,7 +10,7 @@ import {
   useTracks,
 } from '@livekit/components-react';
 import '@livekit/components-styles';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Users, ShoppingBag, MessageSquare } from 'lucide-react';
 import Chat from './Chat';
 import ProductDrawer from './ProductDrawer';
@@ -109,7 +109,12 @@ function LiveOverlay({ isHost }: { isHost: boolean }) {
 }
 
 export default function LiveExperience({ token, isHost }: LiveExperienceProps) {
+  const [isClient, setIsClient] = useState(typeof window !== 'undefined');
   const serverUrl = process.env.NEXT_PUBLIC_LIVEKIT_URL;
+
+  if (!isClient) {
+    return <div className="h-screen w-full bg-black" />;
+  }
 
   if (!serverUrl) {
     return (
