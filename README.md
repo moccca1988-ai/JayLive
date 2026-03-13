@@ -1,11 +1,48 @@
-<div align="center">
+# Jay Jaym Live
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+A premium fashion live shopping experience built with Next.js, LiveKit, and Shopify.
 
-  <h1>Built with AI Studio</h2>
+## Features
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+- **Real-time Video & Audio**: Powered by LiveKit for ultra-low latency streaming.
+- **Live Chat**: Real-time chat using LiveKit Data Channels.
+- **Viewer Count**: Accurate participant tracking.
+- **Shopify Integration**: Server-side only integration with Shopify Storefront API.
+- **Premium UI**: Glassmorphism design, smooth animations, and mobile-first approach.
+- **PWA Ready**: Configured for mobile web app installation.
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+## Tech Stack
 
-</div>
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS
+- Lucide React
+- LiveKit
+- Shopify Storefront API
+
+## Setup
+
+1. Clone the repository.
+2. Install dependencies: `npm install`
+3. Copy `.env.example` to `.env.local` and fill in your credentials:
+   - `SHOPIFY_STORE_DOMAIN`
+   - `SHOPIFY_ACCESS_TOKEN`
+   - `LIVEKIT_URL`
+   - `LIVEKIT_API_KEY`
+   - `LIVEKIT_API_SECRET`
+   - `NEXT_PUBLIC_LIVEKIT_URL`
+4. Run the development server: `npm run dev`
+
+## Architecture Rules Followed
+
+- No Express Server
+- No Socket.io Server
+- No custom Node backend
+- No secrets in the client
+- All Shopify calls are server-side
+- Realtime exclusively via LiveKit
+- Fully Vercel compatible
+
+## Host Login
+
+- **Password**: `jayjaym2026`

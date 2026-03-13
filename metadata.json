@@ -1,0 +1,8 @@
+{
+  "name": "Jay Jaym Live",
+  "description": "Premium Fashion Live Shopping Experience",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
