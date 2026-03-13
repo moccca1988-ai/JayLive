@@ -33,7 +33,7 @@ function LiveOverlay({ isHost }: { isHost: boolean }) {
   return (
     <>
       {/* Fullscreen Video Background */}
-      <div className="fixed inset-0 z-0 bg-[#FAFAFA]">
+      <div className="fixed inset-0 z-0 bg-black">
         {hostTrack ? (
           <ParticipantTile
             trackRef={hostTrack}
@@ -41,7 +41,7 @@ function LiveOverlay({ isHost }: { isHost: boolean }) {
             disableSpeakingIndicator
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-400 text-xl font-light">
+          <div className="w-full h-full flex items-center justify-center text-white/50 text-xl font-light">
             Stream startet gleich
           </div>
         )}
@@ -67,7 +67,7 @@ function LiveOverlay({ isHost }: { isHost: boolean }) {
         {/* Bottom Right: Shopping Button */}
         <button
           onClick={() => setIsDrawerOpen(true)}
-          className="absolute bottom-6 right-4 bg-white text-black rounded-full px-5 py-3.5 shadow-2xl shadow-black/20 hover:scale-105 active:scale-95 transition-all pointer-events-auto flex items-center justify-center gap-2 font-semibold"
+          className="absolute bottom-6 right-4 bg-white/10 backdrop-blur-xl border border-white/20 text-white rounded-full px-5 py-3.5 shadow-2xl shadow-black/50 hover:bg-white/20 hover:scale-105 active:scale-95 transition-all pointer-events-auto flex items-center justify-center gap-2 font-semibold"
         >
           <ShoppingBag size={20} strokeWidth={2.5} />
           <span className="text-[15px]">Shop</span>
@@ -88,7 +88,7 @@ export default function LiveExperience({ token, isHost }: LiveExperienceProps) {
 
   if (!serverUrl) {
     return (
-      <div className="flex items-center justify-center h-screen bg-[#FAFAFA] text-gray-900">
+      <div className="flex items-center justify-center h-screen bg-black text-white">
         <p>LiveKit URL is missing.</p>
       </div>
     );
@@ -101,7 +101,7 @@ export default function LiveExperience({ token, isHost }: LiveExperienceProps) {
       token={token}
       serverUrl={serverUrl}
       data-lk-theme="default"
-      className="h-screen w-full relative bg-[#FAFAFA]"
+      className="h-screen w-full relative bg-black"
     >
       <LiveOverlay isHost={isHost} />
       <RoomAudioRenderer />

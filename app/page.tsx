@@ -64,11 +64,11 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-[#FAFAFA] text-gray-900 flex flex-col items-center justify-center p-6 relative overflow-hidden font-sans">
+    <main className="min-h-screen bg-[#0A0A0A] text-white flex flex-col items-center justify-center p-6 relative overflow-hidden font-sans">
       {/* Soft Background Gradients */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] bg-blue-100/50 rounded-full blur-3xl opacity-50" />
-        <div className="absolute top-[60%] -right-[10%] w-[60%] h-[60%] bg-indigo-100/50 rounded-full blur-3xl opacity-50" />
+        <div className="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] bg-blue-900/20 rounded-full blur-3xl opacity-50" />
+        <div className="absolute top-[60%] -right-[10%] w-[60%] h-[60%] bg-indigo-900/20 rounded-full blur-3xl opacity-50" />
       </div>
 
       <motion.div
@@ -77,14 +77,14 @@ export default function Home() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="z-10 w-full max-w-sm flex flex-col items-center"
       >
-        <div className="w-20 h-20 bg-black text-white rounded-[24px] flex items-center justify-center mb-8 shadow-xl shadow-black/10">
+        <div className="w-20 h-20 bg-white/10 text-white rounded-[24px] flex items-center justify-center mb-8 shadow-xl shadow-black/20 backdrop-blur-md border border-white/10">
           <ShoppingBag size={36} strokeWidth={1.5} />
         </div>
 
-        <h1 className="text-4xl font-semibold tracking-tight text-center mb-3 text-black">
+        <h1 className="text-4xl font-semibold tracking-tight text-center mb-3 text-white">
           Jay Jaym Live
         </h1>
-        <p className="text-gray-500 text-center mb-10 text-[17px] leading-relaxed">
+        <p className="text-gray-400 text-center mb-10 text-[17px] leading-relaxed">
           Entdecke exklusive Fashion<br/>im interaktiven Livestream.
         </p>
 
@@ -92,30 +92,30 @@ export default function Home() {
           <motion.div 
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="w-full bg-red-50 text-red-600 text-[15px] font-medium p-4 rounded-2xl mb-6 text-center border border-red-100"
+            className="w-full bg-red-500/10 text-red-400 text-[15px] font-medium p-4 rounded-2xl mb-6 text-center border border-red-500/20"
           >
             {error}
           </motion.div>
         )}
 
-        <div className="w-full bg-white p-6 rounded-[32px] shadow-sm border border-gray-100">
+        <div className="w-full bg-[#141414] p-6 rounded-[32px] shadow-2xl border border-white/5">
           {!showHostLogin ? (
             <form onSubmit={handleJoin} className="space-y-5">
               <div className="space-y-2">
-                <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider ml-1">Dein Name</label>
+                <label className="text-[13px] font-semibold text-gray-500 uppercase tracking-wider ml-1">Dein Name</label>
                 <input
                   type="text"
                   value={participantName}
                   onChange={(e) => setParticipantName(e.target.value)}
                   placeholder="Wie dürfen wir dich nennen?"
-                  className="w-full bg-gray-50/50 border border-gray-200 rounded-2xl px-5 py-4 text-[17px] focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-300 transition-all placeholder:text-gray-400"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-[17px] text-white focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/20 transition-all placeholder:text-gray-500"
                   required
                 />
               </div>
               <button
                 type="submit"
                 disabled={loading || !participantName.trim()}
-                className="w-full bg-black text-white font-medium rounded-2xl py-4 text-[17px] hover:bg-gray-800 active:scale-[0.98] transition-all disabled:opacity-40 flex items-center justify-center gap-2 shadow-lg shadow-black/10"
+                className="w-full bg-white text-black font-medium rounded-2xl py-4 text-[17px] hover:bg-gray-200 active:scale-[0.98] transition-all disabled:opacity-40 flex items-center justify-center gap-2 shadow-lg shadow-white/10"
               >
                 {loading ? 'Verbinde...' : 'Stream beitreten'}
                 {!loading && <ArrowRight size={20} />}
@@ -124,7 +124,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => setShowHostLogin(true)}
-                  className="text-gray-400 text-[15px] font-medium hover:text-gray-900 transition-colors"
+                  className="text-gray-500 text-[15px] font-medium hover:text-white transition-colors"
                 >
                   Als Host anmelden
                 </button>
@@ -133,20 +133,20 @@ export default function Home() {
           ) : (
             <form onSubmit={handleHostLogin} className="space-y-5">
               <div className="space-y-2">
-                <label className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider ml-1">Host Passwort</label>
+                <label className="text-[13px] font-semibold text-gray-500 uppercase tracking-wider ml-1">Host Passwort</label>
                 <input
                   type="password"
                   value={hostPassword}
                   onChange={(e) => setHostPassword(e.target.value)}
                   placeholder="Passwort eingeben"
-                  className="w-full bg-gray-50/50 border border-gray-200 rounded-2xl px-5 py-4 text-[17px] focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-300 transition-all placeholder:text-gray-400"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-[17px] text-white focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/20 transition-all placeholder:text-gray-500"
                   required
                 />
               </div>
               <button
                 type="submit"
                 disabled={loading || !hostPassword.trim()}
-                className="w-full bg-indigo-600 text-white font-medium rounded-2xl py-4 text-[17px] hover:bg-indigo-700 active:scale-[0.98] transition-all disabled:opacity-40 flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20"
+                className="w-full bg-indigo-500 text-white font-medium rounded-2xl py-4 text-[17px] hover:bg-indigo-600 active:scale-[0.98] transition-all disabled:opacity-40 flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/20"
               >
                 {loading ? 'Verbinde...' : 'Live gehen'}
                 {!loading && <ArrowRight size={20} />}
@@ -155,7 +155,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => setShowHostLogin(false)}
-                  className="text-gray-400 text-[15px] font-medium hover:text-gray-900 transition-colors"
+                  className="text-gray-500 text-[15px] font-medium hover:text-white transition-colors"
                 >
                   Zurück als Zuschauer
                 </button>
