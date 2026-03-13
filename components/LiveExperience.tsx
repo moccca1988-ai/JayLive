@@ -60,7 +60,7 @@ function LiveOverlay({ isHost }: { isHost: boolean }) {
           {/* Viewer Counter */}
           <div className="flex items-center gap-1.5 bg-black/30 backdrop-blur-xl border border-white/10 rounded-full px-3.5 py-1.5 pointer-events-auto shadow-sm">
             <Users size={14} className="text-white/90" />
-            <span className="text-[13px] font-semibold text-white">{participants.length}</span>
+            <span className="text-[13px] font-bold italic tracking-tight text-white">{participants.length}</span>
           </div>
 
           {/* Shopping Button */}

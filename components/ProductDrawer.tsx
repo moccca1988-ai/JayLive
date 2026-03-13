@@ -16,7 +16,12 @@ export default function ProductDrawer({ isOpen, onClose }: ProductDrawerProps) {
   const initialized = useRef(false);
 
   useEffect(() => {
-    if (!isOpen || initialized.current) return;
+    if (!isOpen) {
+      initialized.current = false;
+      return;
+    }
+
+    if (initialized.current) return;
 
     const initShopify = () => {
       try {
