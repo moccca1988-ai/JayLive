@@ -7,18 +7,42 @@ export interface ShopifyProduct {
   imageUrl: string;
 }
 
-export async function getProducts(): Promise<ShopifyProduct[]> {
-  const domain = process.env.SHOPIFY_STORE_DOMAIN;
+export interface ShopifyDebugResponse {
+  normalizedDomain: string;
+  endpoint: string;
+  productCount: number;
+  products: ShopifyProduct[];
+  shopifyStatus?: number;
+  shopifyError?: any;
+}
+
+export async function getProducts(): Promise<ShopifyDebugResponse> {
+  let rawDomain = process.env.SHOPIFY_STORE_DOMAIN || 'jayjaymustafashopping.myshopify.com';
   const token = process.env.SHOPIFY_ACCESS_TOKEN;
 
-  if (!domain || !token) {
-    console.error('[Shopify Error] Missing environment variables: SHOPIFY_STORE_DOMAIN or SHOPIFY_ACCESS_TOKEN');
-    return [];
+  // Normalize SHOPIFY_STORE_DOMAIN: remove https:// if present, remove trailing slash
+  let normalizedDomain = rawDomain.replace(/^https?:\/\//, '').replace(/\/$/, '');
+  
+  // Important likely domain issue: Use the Shopify internal myshopify domain
+  if (normalizedDomain === 'jayjaym.com' || normalizedDomain === 'www.jayjaym.com' || normalizedDomain === 'jayjaym.myshopify.com') {
+    normalizedDomain = 'jayjaymustafashopping.myshopify.com';
   }
 
-  const isAdminToken = token.startsWith('shpat_') || token.startsWith('shpca_') || token.startsWith('shpss_');
+  const endpoint = `https://${normalizedDomain}/api/2026-01/graphql.json`;
 
-  const storefrontQuery = `
+  const debugResponse: ShopifyDebugResponse = {
+    normalizedDomain,
+    endpoint,
+    productCount: 0,
+    products: [],
+  };
+
+  if (!token) {
+    debugResponse.shopifyError = 'Missing SHOPIFY_ACCESS_TOKEN environment variable';
+    return debugResponse;
+  }
+
+  const query = `
     {
       products(first: 20) {
         edges {
@@ -45,96 +69,44 @@ export async function getProducts(): Promise<ShopifyProduct[]> {
     }
   `;
 
-  const adminQuery = `
-    {
-      products(first: 20) {
-        edges {
-          node {
-            id
-            title
-            handle
-            variants(first: 1) {
-              edges {
-                node {
-                  price
-                }
-              }
-            }
-            images(first: 1) {
-              edges {
-                node {
-                  url
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  `;
-
   try {
     // Bypass certificate expiration issues in this environment
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-    // Robustly extract just the hostname, ignoring any paths or protocols the user might have accidentally included
-    const cleanDomain = domain.replace(/^https?:\/\//, '').split('/')[0];
-    
-    const apiUrl = isAdminToken 
-      ? `https://${cleanDomain}/admin/api/2024-01/graphql.json`
-      : `https://${cleanDomain}/api/2024-01/graphql.json`;
-
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-    };
-
-    if (isAdminToken) {
-      headers['X-Shopify-Access-Token'] = token;
-    } else {
-      headers['X-Shopify-Storefront-Access-Token'] = token;
-      // Also try the private token header just in case
-      headers['Shopify-Storefront-Private-Token'] = token;
-    }
-
-    const res = await fetch(apiUrl, {
+    const res = await fetch(endpoint, {
       method: 'POST',
-      headers,
-      body: JSON.stringify({ query: isAdminToken ? adminQuery : storefrontQuery }),
-      next: { revalidate: 60 }, // Cache for 1 minute
+      headers: {
+        'Content-Type': 'application/json',
+        'Shopify-Storefront-Private-Token': token,
+      },
+      body: JSON.stringify({ query }),
+      cache: 'no-store', // Ensure fresh fetch for debugging
     });
+
+    debugResponse.shopifyStatus = res.status;
 
     if (!res.ok) {
       const text = await res.text();
-      console.error(`[Shopify Error] Non-200 response: ${res.status} ${res.statusText} - ${text}`);
-      console.error(`[Shopify Error] Endpoint used: ${apiUrl}`);
-      return [];
+      debugResponse.shopifyError = `Non-200 response: ${res.statusText} - ${text}`;
+      return debugResponse;
     }
 
     const json = await res.json();
     if (json.errors) {
-      console.error(`[Shopify Error] GraphQL errors: ${JSON.stringify(json.errors)}`);
-      return [];
+      debugResponse.shopifyError = json.errors;
+      return debugResponse;
     }
 
-    const products = json.data?.products?.edges;
-    if (!products || products.length === 0) {
-      console.warn('[Shopify Warning] Empty product array returned from Shopify.');
-      return [];
+    const productsEdges = json.data?.products?.edges;
+    if (!productsEdges || productsEdges.length === 0) {
+      debugResponse.shopifyError = 'Empty product array returned from Shopify.';
+      return debugResponse;
     }
 
-    return products.map((edge: any) => {
+    debugResponse.products = productsEdges.map((edge: any) => {
       const node = edge.node;
-      
-      let price = '0.00';
-      let currencyCode = 'USD'; // Admin API doesn't easily expose currency on the variant price string, defaulting to USD
-
-      if (isAdminToken) {
-        price = node.variants?.edges[0]?.node?.price || '0.00';
-      } else {
-        price = node.priceRange?.minVariantPrice?.amount || '0.00';
-        currencyCode = node.priceRange?.minVariantPrice?.currencyCode || 'USD';
-      }
-
+      const price = node.priceRange?.minVariantPrice?.amount || '0.00';
+      const currencyCode = node.priceRange?.minVariantPrice?.currencyCode || 'USD';
       const imageUrl = node.images?.edges[0]?.node?.url || '';
 
       return {
@@ -146,8 +118,12 @@ export async function getProducts(): Promise<ShopifyProduct[]> {
         imageUrl,
       };
     });
-  } catch (error) {
-    console.error('[Shopify Error] Exception fetching products:', error);
-    return [];
+
+    debugResponse.productCount = debugResponse.products.length;
+    return debugResponse;
+
+  } catch (error: any) {
+    debugResponse.shopifyError = error.message || String(error);
+    return debugResponse;
   }
 }
