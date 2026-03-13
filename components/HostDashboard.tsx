@@ -6,10 +6,11 @@ import { Settings, X, Video, Mic, VideoOff, MicOff, Play, Square, Users, Message
 import { useLocalParticipant, useRoomContext, useParticipants } from '@livekit/components-react';
 import { RoomEvent } from 'livekit-client';
 import HostDropManager from '@/modules/live-drops/components/HostDropManager';
+import ReservationMessages from '@/modules/reservation-messaging/components/ReservationMessages';
 
 export default function HostDashboard() {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'stream' | 'products' | 'drops' | 'chat' | 'stats'>('stream');
+  const [activeTab, setActiveTab] = useState<'stream' | 'products' | 'drops' | 'messages' | 'chat' | 'stats'>('stream');
   const { localParticipant, isMicrophoneEnabled, isCameraEnabled } = useLocalParticipant();
   const room = useRoomContext();
   const participants = useParticipants();
@@ -84,12 +85,12 @@ export default function HostDashboard() {
             </div>
 
             {/* Tabs */}
-            <div className="flex border-b border-white/10 bg-[#0A0A0A]">
-              {(['stream', 'products', 'drops', 'chat', 'stats'] as const).map((tab) => (
+            <div className="flex border-b border-white/10 bg-[#0A0A0A] overflow-x-auto no-scrollbar">
+              {(['stream', 'products', 'drops', 'messages', 'chat', 'stats'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`flex-1 py-4 text-[13px] font-semibold capitalize transition-all cursor-pointer active:scale-95 ${
+                  className={`flex-none px-4 py-4 text-[13px] font-semibold capitalize transition-all cursor-pointer active:scale-95 ${
                     activeTab === tab ? 'bg-[#141414] text-white shadow-sm rounded-t-xl border-t border-x border-white/10' : 'text-white/50 hover:text-white/80 hover:bg-white/5'
                   }`}
                 >
@@ -160,6 +161,10 @@ export default function HostDashboard() {
 
               {activeTab === 'drops' && (
                 <HostDropManager />
+              )}
+
+              {activeTab === 'messages' && (
+                <ReservationMessages role="host" />
               )}
 
               {activeTab === 'chat' && (

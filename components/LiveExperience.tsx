@@ -10,11 +10,12 @@ import {
 } from '@livekit/components-react';
 import '@livekit/components-styles';
 import { useEffect, useState } from 'react';
-import { Users, ShoppingBag } from 'lucide-react';
+import { Users, ShoppingBag, MessageSquare } from 'lucide-react';
 import Chat from './Chat';
 import ProductDrawer from './ProductDrawer';
 import HostDashboard from './HostDashboard';
 import LiveDropCard from '@/modules/live-drops/components/LiveDropCard';
+import ViewerMessagesDrawer from '@/modules/reservation-messaging/components/ViewerMessagesDrawer';
 import { Track, VideoPresets } from 'livekit-client';
 
 interface LiveExperienceProps {
@@ -24,6 +25,7 @@ interface LiveExperienceProps {
 
 function LiveOverlay({ isHost }: { isHost: boolean }) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isMessagesOpen, setIsMessagesOpen] = useState(false);
   const participants = useParticipants();
   const room = useRoomContext();
   const tracks = useTracks([Track.Source.Camera]);
@@ -64,6 +66,17 @@ function LiveOverlay({ isHost }: { isHost: boolean }) {
             <span className="text-[13px] font-bold italic tracking-tight text-white">{participants.length}</span>
           </div>
 
+          {/* Messages Button (Viewer only) */}
+          {!isHost && (
+            <button
+              onClick={() => setIsMessagesOpen(true)}
+              className="bg-black/30 backdrop-blur-xl border border-white/10 text-white rounded-full p-2.5 shadow-2xl hover:bg-black/40 hover:scale-105 active:scale-95 transition-all pointer-events-auto flex items-center justify-center"
+              title="Messages"
+            >
+              <MessageSquare size={20} />
+            </button>
+          )}
+
           {/* Shopping Button */}
           <button
             onClick={() => setIsDrawerOpen(true)}
@@ -86,6 +99,9 @@ function LiveOverlay({ isHost }: { isHost: boolean }) {
 
       {/* Product Drawer */}
       <ProductDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
+
+      {/* Viewer Messages Drawer */}
+      {!isHost && <ViewerMessagesDrawer isOpen={isMessagesOpen} onClose={() => setIsMessagesOpen(false)} />}
     </>
   );
 }

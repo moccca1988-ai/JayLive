@@ -20,19 +20,19 @@ export default function LiveDropCard() {
   const [reserving, setReserving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchDrop = async () => {
-    try {
-      const res = await fetch(`/api/live-drops?userId=${encodeURIComponent(localParticipant.identity)}`);
-      const data = await res.json();
-      setDrop(data.drop);
-      setOptions(data.options || []);
-      setUserReservation(data.userReservation || null);
-    } catch (e) {
-      console.error('Failed to fetch drop', e);
-    }
-  };
-
   useEffect(() => {
+    const fetchDrop = async () => {
+      try {
+        const res = await fetch(`/api/live-drops?userId=${encodeURIComponent(localParticipant.identity)}`);
+        const data = await res.json();
+        setDrop(data.drop);
+        setOptions(data.options || []);
+        setUserReservation(data.userReservation || null);
+      } catch (e) {
+        console.error('Failed to fetch drop', e);
+      }
+    };
+
     fetchDrop();
 
     const handleData = (payload: Uint8Array, participant: any, kind: any, topic?: string) => {

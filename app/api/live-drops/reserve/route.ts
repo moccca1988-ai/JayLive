@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db, DropReservation } from '@/modules/live-drops/server/db';
 import { broadcastDropUpdate } from '@/modules/live-drops/server/livekit';
+import { messagingDb, Conversation, Message } from '@/modules/reservation-messaging/server/db';
 
 export async function POST(req: Request) {
   const { dropId, userId, optionValue } = await req.json();
@@ -40,6 +41,33 @@ export async function POST(req: Request) {
   };
 
   db.drop_reservations.push(reservation);
+
+  // Create conversation
+  const conversationId = Date.now().toString() + Math.random().toString(36).substring(7);
+  const conversation: Conversation = {
+    id: conversationId,
+    drop_id: dropId,
+    host_id: drop.host_id,
+    viewer_id: userId,
+    option_selected: optionValue,
+    reservation_position: position,
+    status: 'in progress',
+    created_at: Date.now(),
+    last_message_at: Date.now(),
+  };
+
+  messagingDb.conversations.push(conversation);
+
+  const systemMessage: Message = {
+    id: Date.now().toString() + Math.random().toString(36).substring(7),
+    conversation_id: conversationId,
+    sender_id: 'system',
+    message_text: `Reservation confirmed for ${drop.title} – ${dropOption.option_label} ${optionValue} – Position #${position}.\nYou can now communicate directly with the host.`,
+    message_type: 'system',
+    created_at: Date.now(),
+  };
+
+  messagingDb.messages.push(systemMessage);
 
   // Check if drop is full
   const allOptions = db.drop_options.filter(s => s.drop_id === dropId);
