@@ -148,8 +148,8 @@ export default function LiveExperience({ token, isHost }: LiveExperienceProps) {
           deviceId: 'default',
           facingMode: 'user',
           resolution: {
-            width: { ideal: 1920 },
-            height: { ideal: 1080 },
+            width: { ideal: 3840 },
+            height: { ideal: 2160 },
             frameRate: { ideal: 30, max: 30 },
           },
         },

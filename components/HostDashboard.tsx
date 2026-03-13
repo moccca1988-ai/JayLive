@@ -10,11 +10,14 @@ import ReservationMessages from '@/modules/reservation-messaging/components/Rese
 
 export default function HostDashboard() {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'stream' | 'products' | 'drops' | 'messages' | 'chat' | 'stats'>('stream');
+  const [activeTab, setActiveTab] = useState<'stream' | 'products' | 'drops' | 'messages' | 'chat' | 'stats' | 'camera'>('stream');
   const { localParticipant, isMicrophoneEnabled, isCameraEnabled } = useLocalParticipant();
   const room = useRoomContext();
   const participants = useParticipants();
   const [isStreaming, setIsStreaming] = useState(false);
+  const [cameraQuality, setCameraQuality] = useState<'auto' | '720p' | '1080p' | '4k'>('auto');
+  const [mirrorPreview, setMirrorPreview] = useState(true);
+  const [lowLightOpt, setLowLightOpt] = useState(false);
 
   const toggleCamera = async () => {
     if (isCameraEnabled) {
@@ -86,7 +89,7 @@ export default function HostDashboard() {
 
             {/* Tabs */}
             <div className="flex border-b border-white/5 bg-black/20 overflow-x-auto no-scrollbar px-4">
-              {(['stream', 'products', 'drops', 'messages', 'chat', 'stats'] as const).map((tab) => (
+              {(['stream', 'products', 'drops', 'messages', 'chat', 'stats', 'camera'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
@@ -157,6 +160,37 @@ export default function HostDashboard() {
                 </div>
               )}
 
+              {activeTab === 'camera' && (
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <label className="text-xs font-black uppercase tracking-widest text-white/40">Resolution</label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {(['auto', '720p', '1080p', '4k'] as const).map((q) => (
+                        <button
+                          key={q}
+                          onClick={() => setCameraQuality(q)}
+                          className={`py-3 rounded-xl border font-black uppercase tracking-widest text-[10px] transition-all ${
+                            cameraQuality === q ? 'bg-white text-black' : 'bg-white/5 border-white/5 text-white/30 hover:bg-white/10'
+                          }`}
+                        >
+                          {q}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <label className="flex items-center justify-between cursor-pointer">
+                      <span className="text-xs font-black uppercase tracking-widest text-white/40">Mirror Preview</span>
+                      <input type="checkbox" checked={mirrorPreview} onChange={() => setMirrorPreview(!mirrorPreview)} className="toggle" />
+                    </label>
+                    <label className="flex items-center justify-between cursor-pointer">
+                      <span className="text-xs font-black uppercase tracking-widest text-white/40">Low Light Optimization</span>
+                      <input type="checkbox" checked={lowLightOpt} onChange={() => setLowLightOpt(!lowLightOpt)} className="toggle" />
+                    </label>
+                  </div>
+                </div>
+              )}
+
               {activeTab === 'products' && (
                 <div className="space-y-4 text-center py-12">
                   <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/5">
@@ -197,8 +231,8 @@ export default function HostDashboard() {
                   <div className="bg-white/5 p-5 rounded-2xl border border-white/5 flex items-center gap-5 shadow-inner">
                     <div className="bg-white/5 p-3.5 rounded-xl border border-white/5"><MessageSquare size={20} className="text-[#7C6CFF]" /></div>
                     <div>
-                      <p className="text-[10px] text-white/30 font-black uppercase tracking-widest mb-1">Chat Messages</p>
-                      <p className="text-2xl font-black text-white tracking-tight">--</p>
+                      <p className="text-[10px] text-white/30 font-black uppercase tracking-widest mb-1">Stream Quality</p>
+                      <p className="text-2xl font-black text-white tracking-tight">Excellent</p>
                     </div>
                   </div>
                   <div className="bg-white/5 p-5 rounded-2xl border border-white/5 flex items-center gap-5 shadow-inner">

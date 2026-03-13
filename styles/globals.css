@@ -97,3 +97,16 @@ body {
   mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
 }
+
+.toggle {
+  @apply appearance-none w-10 h-6 bg-white/10 rounded-full relative cursor-pointer transition-colors;
+}
+.toggle:checked {
+  @apply bg-[#7C6CFF];
+}
+.toggle::before {
+  @apply content-[''] absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform;
+}
+.toggle:checked::before {
+  @apply translate-x-4;
+}
