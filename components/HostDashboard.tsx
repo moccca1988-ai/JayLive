@@ -160,7 +160,7 @@ export default function HostDashboard() {
               )}
 
               {activeTab === 'drops' && (
-                <HostDropManager />
+                <HostDropManager onViewMessages={() => setActiveTab('messages')} />
               )}
 
               {activeTab === 'messages' && (
