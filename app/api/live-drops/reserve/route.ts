@@ -37,7 +37,7 @@ export async function POST(req: Request) {
     option_id: dropOption.id,
     position,
     created_at: Date.now(),
-    contacted: false
+    status: 'waiting'
   };
 
   db.drop_reservations.push(reservation);

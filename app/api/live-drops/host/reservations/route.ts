@@ -10,8 +10,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 });
   }
 
-  if (action === 'TOGGLE_CONTACTED') {
-    reservation.contacted = !reservation.contacted;
+  if (action === 'UPDATE_STATUS') {
+    const { status } = await req.json();
+    reservation.status = status;
     await broadcastDropUpdate();
     return NextResponse.json({ success: true });
   }

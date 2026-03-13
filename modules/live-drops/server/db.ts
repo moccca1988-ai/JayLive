@@ -19,6 +19,8 @@ export interface DropOption {
   reserved: number;
 }
 
+export type ReservationStatus = 'waiting' | 'contacted' | 'in progress' | 'completed' | 'cancelled';
+
 export interface DropReservation {
   id: string;
   drop_id: string;
@@ -26,7 +28,7 @@ export interface DropReservation {
   option_id: string;
   position: number;
   created_at: number;
-  contacted?: boolean;
+  status: ReservationStatus;
 }
 
 const globalForDb = globalThis as unknown as {
