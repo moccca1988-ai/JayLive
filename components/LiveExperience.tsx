@@ -6,6 +6,7 @@ import {
   useParticipants,
   useRoomContext,
   ParticipantTile,
+  VideoTrack,
   useTracks,
 } from '@livekit/components-react';
 import '@livekit/components-styles';
@@ -37,10 +38,12 @@ function LiveOverlay({ isHost }: { isHost: boolean }) {
       {/* Fullscreen Video Background */}
       <div className="fixed inset-0 z-0 bg-[#0B0B0F]">
         {hostTrack ? (
-          <ParticipantTile
+          <VideoTrack
             trackRef={hostTrack}
             className="w-full h-full object-cover"
-            disableSpeakingIndicator
+            autoPlay={true}
+            playsInline={true}
+            muted={true}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-white/20 text-xl font-medium tracking-tight">
@@ -127,13 +130,14 @@ export default function LiveExperience({ token, isHost }: LiveExperienceProps) {
         dynacast: true,
         publishDefaults: {
           simulcast: true,
+          audioBitrate: 128000,
           videoSimulcastLayers: [
             {
               ...VideoPresets.h1080,
               resolution: VideoPresets.h1080.resolution,
               encoding: {
                 ...VideoPresets.h1080.encoding,
-                maxBitrate: 5000000,
+                maxBitrate: 6000000,
               },
             },
             VideoPresets.h720,
@@ -141,11 +145,18 @@ export default function LiveExperience({ token, isHost }: LiveExperienceProps) {
           ],
         },
         videoCaptureDefaults: {
+          deviceId: 'default',
+          facingMode: 'user',
           resolution: {
-            width: 1920,
-            height: 1080,
-            frameRate: 30,
+            width: { ideal: 1920 },
+            height: { ideal: 1080 },
+            frameRate: { ideal: 30, max: 30 },
           },
+        },
+        audioCaptureDefaults: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
         },
       }}
       data-lk-theme="default"
