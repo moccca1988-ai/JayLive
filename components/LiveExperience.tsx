@@ -14,7 +14,7 @@ import { Users, ShoppingBag } from 'lucide-react';
 import Chat from './Chat';
 import ProductDrawer from './ProductDrawer';
 import HostDashboard from './HostDashboard';
-import { Track } from 'livekit-client';
+import { Track, VideoPresets } from 'livekit-client';
 
 interface LiveExperienceProps {
   token: string;
@@ -103,6 +103,32 @@ export default function LiveExperience({ token, isHost }: LiveExperienceProps) {
       audio={isHost}
       token={token}
       serverUrl={serverUrl}
+      options={{
+        adaptiveStream: true,
+        dynacast: true,
+        publishDefaults: {
+          simulcast: true,
+          videoSimulcastLayers: [
+            {
+              ...VideoPresets.h1080,
+              resolution: VideoPresets.h1080.resolution,
+              encoding: {
+                ...VideoPresets.h1080.encoding,
+                maxBitrate: 5000000,
+              },
+            },
+            VideoPresets.h720,
+            VideoPresets.h360,
+          ],
+        },
+        videoCaptureDefaults: {
+          resolution: {
+            width: 1920,
+            height: 1080,
+            frameRate: 30,
+          },
+        },
+      }}
       data-lk-theme="default"
       className="h-screen w-full relative bg-black"
     >
