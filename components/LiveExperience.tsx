@@ -135,7 +135,6 @@ export default function LiveExperience({ token, isHost }: LiveExperienceProps) {
         dynacast: true,
         publishDefaults: {
           simulcast: true,
-          audioBitrate: 128000,
           videoSimulcastLayers: [
             {
               ...VideoPresets.h1080,
@@ -153,9 +152,9 @@ export default function LiveExperience({ token, isHost }: LiveExperienceProps) {
           deviceId: 'default',
           facingMode: 'user',
           resolution: {
-            width: { ideal: 1920 },
-            height: { ideal: 1080 },
-            frameRate: { ideal: 30, max: 30 },
+            width: 1920,
+            height: 1080,
+            frameRate: 30,
           },
         },
         audioCaptureDefaults: {

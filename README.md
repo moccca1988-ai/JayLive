@@ -1,48 +1,45 @@
 # Jay Jaym Live
 
-A premium fashion live shopping experience built with Next.js, LiveKit, and Shopify.
+Premium Fashion Live Shopping Experience.
 
-## Features
+## Project Purpose
+Jay Jaym Live is an interactive live shopping platform designed to bridge the gap between high-end fashion and real-time customer engagement. It features LiveKit streaming, chat, Shopify integration, and social media simulcasting.
 
-- **Real-time Video & Audio**: Powered by LiveKit for ultra-low latency streaming.
-- **Live Chat**: Real-time chat using LiveKit Data Channels.
-- **Viewer Count**: Accurate participant tracking.
-- **Shopify Integration**: Server-side only integration with Shopify Storefront API.
-- **Premium UI**: Glassmorphism design, smooth animations, and mobile-first approach.
-- **PWA Ready**: Configured for mobile web app installation.
+## Deployment Instructions (Vercel)
 
-## Tech Stack
+1. **Clone repo from GitHub:**
+   ```bash
+   git clone <your-repo-url>
+   cd jay-jaym-live
+   ```
 
-- Next.js 14 (App Router)
-- TypeScript
-- Tailwind CSS
-- Lucide React
-- LiveKit
-- Shopify Storefront API
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-## Setup
+3. **Set environment variables:**
+   Copy `.env.example` to `.env.local` and fill in the required values.
+   ```bash
+   cp .env.example .env.local
+   ```
+   *Note: In Vercel, add these variables via the Project Settings > Environment Variables dashboard.*
 
-1. Clone the repository.
-2. Install dependencies: `npm install`
-3. Copy `.env.example` to `.env.local` and fill in your credentials:
-   - `SHOPIFY_STORE_DOMAIN`
-   - `SHOPIFY_ACCESS_TOKEN`
-   - `LIVEKIT_URL`
-   - `LIVEKIT_API_KEY`
-   - `LIVEKIT_API_SECRET`
-   - `NEXT_PUBLIC_LIVEKIT_URL`
-4. Run the development server: `npm run dev`
+4. **Deploy to Vercel:**
+   Push your code to your GitHub repository connected to Vercel. Vercel will automatically detect the `nextjs` framework and run `npm run build`.
 
-## Architecture Rules Followed
+5. **Configure domain:**
+   Set up your custom domain in the Vercel project settings.
 
-- No Express Server
-- No Socket.io Server
-- No custom Node backend
-- No secrets in the client
-- All Shopify calls are server-side
-- Realtime exclusively via LiveKit
-- Fully Vercel compatible
+## Environment Variables
+- `NEXT_PUBLIC_*`: Variables prefixed with this are exposed to the browser.
+- All other variables are **server-only** and must never be exposed to the client.
 
-## Host Login
+## Future Self-Hosted LiveKit Server
+While the application currently supports LiveKit Cloud, it is architected to support a self-hosted LiveKit server on Ubuntu/IONOS.
 
-- **Password**: `jayjaym2026`
+The server will run on Ubuntu using Docker.
+1. Provision an Ubuntu server.
+2. Install Docker and Docker Compose.
+3. Use the provided configuration template in `/server/livekit-config.yaml`.
+4. Update `LIVEKIT_URL` and `NEXT_PUBLIC_LIVEKIT_URL` in your environment configuration to point to your new server's domain.

@@ -1,9 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import LiveExperience from '@/components/LiveExperience';
+import dynamic from 'next/dynamic';
 import { motion } from 'motion/react';
 import { ShoppingBag, ArrowRight } from 'lucide-react';
+
+const LiveExperience = dynamic(() => import('@/components/LiveExperience'), {
+  ssr: false,
+});
 
 export default function Home() {
   const [participantName, setParticipantName] = useState('');
