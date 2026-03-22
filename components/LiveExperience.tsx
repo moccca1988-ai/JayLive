@@ -41,6 +41,7 @@ function LiveOverlay({ isHost }: { isHost: boolean }) {
           <VideoTrack
             trackRef={hostTrack}
             className="w-full h-full object-cover"
+            style={{ transform: isHost ? 'scaleX(-1)' : 'scaleX(1)' }}
             autoPlay={true}
             playsInline={true}
             muted={true}
@@ -135,15 +136,12 @@ export default function LiveExperience({ token, isHost }: LiveExperienceProps) {
         dynacast: true,
         publishDefaults: {
           simulcast: true,
+          videoEncoding: {
+            maxBitrate: 6000000,
+            maxFramerate: 30,
+          },
           videoSimulcastLayers: [
-            {
-              ...VideoPresets.h1080,
-              resolution: VideoPresets.h1080.resolution,
-              encoding: {
-                ...VideoPresets.h1080.encoding,
-                maxBitrate: 6000000,
-              },
-            },
+            VideoPresets.h1080,
             VideoPresets.h720,
             VideoPresets.h360,
           ],
